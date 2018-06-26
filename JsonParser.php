@@ -15,11 +15,12 @@ abstract class JsonType
 	const Null=0;
 	const Integer=1;
 	const Fraction=2;
-	const Exponent=3;
-	const String=4;
-	const Boolean=5;
-	const Array=6;
-	const Object=7;
+	const Integer_Exponent=3;
+	const Fraction_Exponent=4;
+	const String=5;
+	const Boolean=6;
+	const Array=7;
+	const Object=8;
 }
 class Json
 {
@@ -59,6 +60,11 @@ class Json
 	private function is_number($input)
 	{
 		return is_numeric($input);	
+	}
+	private function is_skip($char)
+	{
+		//true or false
+		return $this->char == ' ' || $this->char == '\t' || $this->char == '\n' || $this->char == '\r';
 	}
 	public function decode($input)
 	{
@@ -117,12 +123,13 @@ class Json
 				}
 				else if($this->status == JsonStatus::Value)
 				{
-					if($this->char == ' ' || $this->char == '\t' || $this->char == '\n' || $this->char == '\r')
+					if($this->is_skip($this->char))
 					{
 						//skip
 					}
 					else if($this->char == ',')
 					{
+						print "Value : " . $this->value."\n";
 						$this->value='';
 						$this->value_type=null;
 						$this->status=JsonStatus::Normal;
@@ -138,13 +145,42 @@ class Json
 					else if($this->value == '' && 
 						(
 							$this->is_number($this->char) ||
-							$this->char == '-' && $this->is_number($this->char_next) ||
-							$this->char == '.' && $this->is_number($this->char_next)
+							$this->char == '-'/* && $this->is_number($this->char_next) */||
+							$this->char == '.'/* && $this->is_number($this->char_next)*/
 						)
 					)
 					{
-						print "NUMBER>>>" . $this->char."\n";
-						$this->value_type=JsonType::Integer;
+						//<int>
+						//-<int>
+						//.<int>
+						//-.<int>
+						//<float>
+						//-<float>
+						if($this->is_skip($this->char))
+						{
+							//skip
+						}
+						else
+						{
+							if($this->value =='')
+							{
+								$this->value_type=JsonType::Integer;
+							}
+							else if($this->value_type == JsonType::Integer && $this->char == '.')
+							{
+								$this->value_type=JsonType::Fraction;
+								$this->value.=$this->char;
+							}
+							else if(is_number($this->char))
+							{
+								$this->value.=$this->char;
+							}
+							else if($this->value_type == JsonType::Fraction && $this->char == '.')
+							{
+								exit("Error!\nCan not use multi use . in a number!");
+							}
+							//print "NUMBER>>>" . $this->char."\n";
+						}
 					}
 					else if($this->value == "" && $this->char == '"')
 					{
@@ -172,7 +208,7 @@ class Json
 						}
 						else if($this->type == JsonPosition::Value)
 						{
-							print "Value : " . $this->str."\n";
+							//print "Value : " . $this->str."\n";
 							$this->value=$this->str;
 							$this->status=JsonStatus::Value;
 						}
