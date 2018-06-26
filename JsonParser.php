@@ -170,6 +170,7 @@ class Json
 				}
 				else if($this->status == JsonStatus::Number)
 				{
+					print "===".$this->char."\n";
 					if($this->char == ',' || $this->char == ']' || $this->char == '}')
 					{
 						$this->offset--;
@@ -191,6 +192,7 @@ class Json
 						}
 						else if($this->value == '.')
 						{
+							$this->value.="0.";
 							$this->type=JsonType::Fraction;
 						}
 						else if($this->char == '.' && $this->type == JSONTYPE::Fraction)
@@ -200,6 +202,7 @@ class Json
 						else if($this->char == '.')
 						{
 							$this->value.='.';
+							$this->type=JsonType::Fraction;
 						}
 						else if($this->is_number($this->char))
 						{
@@ -233,6 +236,7 @@ class Json
 						$this->str.=$this->char;
 					}
 				}
+				print "---".$this->char."\n";
 			}
 		}
 	}
