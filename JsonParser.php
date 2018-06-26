@@ -3,7 +3,8 @@ abstract class JsonStatus
 {
 	const Normal = 0;
 	const String = 1;
-	const Value = 2;
+	const Number = 2;
+	const Value = 3;
 }
 abstract class JsonPosition
 {
@@ -45,6 +46,7 @@ class Json
 	private $type=null;
 	private $value="";
 	private $value_type=null;
+	private $number_x=1;
 	private function string_escape($input)
 	{
 		$input=str_ireplace(array("\\r","\\n","\\r","\\n"),"\n",$input);
@@ -136,6 +138,7 @@ class Json
 					}
 					else if($this->char == ']' || $this->char == '}')
 					{
+						print "Value : " . $this->value."\n";
 						$this->value='';
 						$this->value_type=null;
 						$this->status=JsonStatus::Normal;
@@ -150,39 +153,11 @@ class Json
 						)
 					)
 					{
-						//<int>
-						//-<int>
-						//.<int>
-						//-.<int>
-						//<float>
-						//-<float>
-						if($this->is_skip($this->char))
-						{
-							//skip
-						}
-						else
-						{
-							if($this->value =='')
-							{
-								$this->value_type=JsonType::Integer;
-							}
-							else if($this->value_type == JsonType::Integer && $this->char == '.')
-							{
-								$this->value_type=JsonType::Fraction;
-								$this->value.=$this->char;
-							}
-							else if(is_number($this->char))
-							{
-								$this->value.=$this->char;
-							}
-							else if($this->value_type == JsonType::Fraction && $this->char == '.')
-							{
-								exit("Error!\nCan not use multi use . in a number!");
-							}
-							//print "NUMBER>>>" . $this->char."\n";
-						}
+						$this->value=$this->char;
+						$this->status=JsonStatus::Number;
+						$this->type=JsonPosition::Value;
 					}
-					else if($this->value == "" && $this->char == '"')
+					else if($this->value == '' && $this->char == '"')
 					{
 						$this->value_type=JsonType::String;
 						$this->status=JsonStatus::String;
@@ -191,6 +166,45 @@ class Json
 					else
 					{
 						print ">>>" . $this->char."\n";
+					}
+				}
+				else if($this->status == JsonStatus::Number)
+				{
+					if($this->char == ',' || $this->char == ']' || $this->char == '}')
+					{
+						$this->offset--;
+						$this->status=JsonStatus::Value;
+					}
+					else
+					{
+						if($this->value == '-')
+						{
+							$this->number_x=-1;
+						}
+						else if($this->number_x == 1 && $this->char == '-')
+						{
+							exit("Error!\nCan not use `-` character between a number! , only can in the first!");
+						}
+						else if($this->number_x == -1 && $this->char == '-')
+						{
+							exit("Error!\nCan not use many time `-` character in a number!");
+						}
+						else if($this->value == '.')
+						{
+							$this->type=JsonType::Fraction;
+						}
+						else if($this->char == '.' && $this->type == JSONTYPE::Fraction)
+						{
+							exit("Error!\nCan not use many time `.` character in a number!");
+						}
+						else if($this->char == '.')
+						{
+							$this->value.='.';
+						}
+						else if($this->is_number($this->char))
+						{
+							$this->value.=$this->char;
+						}
 					}
 				}
 				else if($this->status == JsonStatus::String)
