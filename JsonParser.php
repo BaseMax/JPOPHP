@@ -4,12 +4,17 @@ abstract class JsonStatus
 	const Normal = 0;
 	const Key = 1;
 	const Value = 2;
+	const String = 3;
+	const Thursday = 4;
+	const Friday = 5;
+	const Saturday = 6;
 }
 class Json
 {
 	//0:not begin
 	//1:in begin
 	//2:finish
+	private $array=array();
 	private $start=0;
 	private $input=null;
 	private $string="";
@@ -25,6 +30,18 @@ class Json
 	private $status=JsonStatus::Normal;
 	private $key="";
 	private $value="";
+	private function string_escape($input)
+	{
+		$input=str_ireplace(array("\\r","\\n","\\r","\\n"),"\n",$input);
+		//$input=str_replace("\\r\\n","\n",$input);
+		//$input=str_replace("\\r","\n",$input);
+		//$input=str_replace("\\n","\n",$input);
+		//$input=str_replace("\\s"," ",$input);
+		$input=str_replace("\\t","\t",$input);
+		$input=str_replace("\\'","'",$input);
+		$input=str_replace("\\\"","\"",$input);
+		return $input;
+	}
 	public function decode($input)
 	{
 		$input=trim($input);
@@ -66,28 +83,42 @@ class Json
 			{
 				if($this->status == JsonStatus::Normal)
 				{
-					if($this->char == '"')
+					if($this->char == ' ' || $this->char == '\t' || $this->char == '\n' || $this->char == '\r')
+					{
+						//skip
+					}
+					else if($this->char == '"')
 					{
 						$this->status=JsonStatus::Key;
 					}
+					else if($this->char == ':')
+					{
+						$this->status=JsonStatus::Value;
+					}
+				}
+				else if($this->status == JsonStatus::Value)
+				{
+
 				}
 				else if($this->status == JsonStatus::Key)
 				{
 					if($this->char == '"' && $this->char_prev !='\\')
 					{
 						//require : 
+						$this->key=$this->string_escape($this->key);
 						print $this->key."\n";
 						$this->key="";
 						$this->status=JsonStatus::Normal;
 					}
 					else
 					{
+						$this->key.=$this->char;
+						/*
 						if
 						(
-							//Windows uses CR+LF (\r\n)
+							//Windows CR+LF (\r\n)
 							//Linux LF (\n)
 							//OSX CR (\r)
-							//http://php.net/manual/en/regexp.reference.escape.php
 							$this->char == '\\' && $this->char_next != '' && 
 							(
 								$this->char_next == 'a' ||
@@ -157,11 +188,16 @@ class Json
 								$this->offset++;
 								$this->key.="\"";
 							}
+							else
+							{
+								exit("Error!\nNot Support \...!");
+							}
 						}
 						else
 						{
 							$this->key.=$this->char;
 						}
+						*/
 					}
 				}
 			}
