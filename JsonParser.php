@@ -4,10 +4,6 @@ abstract class JsonStatus
 	const Normal = 0;
 	const Key = 1;
 	const Value = 2;
-	const String = 3;
-	const Thursday = 4;
-	const Friday = 5;
-	const Saturday = 6;
 }
 class Json
 {
