@@ -25,7 +25,7 @@ Tiny Library for parse JSON.
 
 ## Unfinished items
   
-  - `decode()` function
+  - `encode()` function
   - Improve speed and performance (Speed does not reach `C Language`!)
   - Fix bugs of arrays in arrays (Tree Array)
   
