@@ -4,7 +4,7 @@ $data='{"name":"Max","family":"Base"}';
 $time = microtime(true);
 for($i=1;$i<=10000;$i++)
 {
-	$arr=json_encode($data);
+	json_encode($data);
 }
 echo (microtime(true) - $time) . " elapsed\n";
 /*
