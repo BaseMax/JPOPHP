@@ -1,4 +1,14 @@
 <?php
+/**
+*
+* @Name : JsonParser
+* @Version : 1.1
+* @Programmer : Max
+* @Date : 2018-06-26,2018-06-27
+* @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
+* @Repository : https://github.com/BaseMax/JsonParser
+*
+**/
 abstract class JsonStatus
 {
 	const Normal = 0;
@@ -226,7 +236,7 @@ class Json
 									$new_json=new json;
 									//print " =====> ". $string;
 									$value=$new_json->decode($string);
-									$this->item_append($o_key,$new_json->array,JsonType::Array);
+									$this->item_append($o_key,$value,JsonType::Array);
 									$continue=false;
 									//break;
 								}
@@ -349,9 +359,10 @@ class Json
 						$this->str.=$this->char;
 					}
 				}
-				print "---".$this->char."\n";
+				//print "---".$this->char."\n";
 			}
 		}
+		return $this->array;
 	}
 	public function encode($input)
 	{
