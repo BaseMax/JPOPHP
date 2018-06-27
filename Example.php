@@ -9,5 +9,5 @@ $data=json_encode(["name"=>"ali","int"=>110,"float"=>19.98,"-int"=>-110,"-float"
 //$array=$json->decode('{"list":{"name":"ali","family":"ahmadi"}}');
 $array=$json->decode('{"list":{"name":"ali","family":"ahmadi"},"age":18}');
 //$array=$json->decode('{"name":"ali","int":110,"float":19.98,"-int":-110,"-float":-19.98,"bool":TRUE,"bbb":false}');
-//print($array);
-print_r($json->array);
+print_r($array);
+//print_r($json->array);
