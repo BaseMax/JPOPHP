@@ -25,14 +25,16 @@ abstract class JsonType
 }
 class Json
 {
-	private $array=array();
+	//private $array=array();
+	public $array=array();
 	//0:not begin
 	//1:in begin
 	//2:finish
 	private $start=0;
 	private $input=null;
 	private $string="";
-	private $offset=0;
+	//can use $offset for error log AND get current char!
+	private $offset=0;//position of current pointer , current char!
 	private $length=0;
 	private $char='';
 	private $char_prev='';
@@ -68,8 +70,42 @@ class Json
 		//true or false
 		return $this->char == ' ' || $this->char == '\t' || $this->char == '\n' || $this->char == '\r';
 	}
+	private function item_append($key,$value,$type)
+	{
+		switch($type)
+		{
+			case JsonType::Null:
+			break;
+			case JsonType::Integer:
+				$value=(int) $value;
+			break;
+			case JsonType::Fraction:
+				$value=(float) $value;
+			break;
+			case JsonType::Integer_Exponent:
+				$value=(int) $value;
+			break;
+			case JsonType::Fraction_Exponent:
+				$value=(float) $value;
+			break;
+			case JsonType::String:
+				//any
+			break;
+			case JsonType::Boolean:
+				$value=(bool) ($value == "true" ? true : false);
+			break;
+			case JsonType::Array:
+				//soon
+			break;
+			case JsonType::Object:
+				//soon
+			break;
+		}
+		$this->array[$key]=$value;
+	}
 	public function decode($input)
 	{
+		$this->array=array();
 		$input=trim($input);
 		$this->string=$input;
 		$this->offset=0;
@@ -131,18 +167,76 @@ class Json
 					}
 					else if($this->char == ',')
 					{
-						print "Value : " . $this->value."\n";
+						$this->item_append($this->key,$this->value,$this->value_type);
+						//print "KKK : ". $this->key."\n";
+						//print "Value : " . $this->value."\n";
 						$this->value='';
 						$this->value_type=null;
 						$this->status=JsonStatus::Normal;
 					}
+					//close,finish
 					else if($this->char == ']' || $this->char == '}')
 					{
-						print "Value : " . $this->value."\n";
+						$this->item_append($this->key,$this->value,$this->value_type);
+						//print "Key : " . $this->key."\n";
+						//print "Value : " . $this->value."\n";
 						$this->value='';
 						$this->value_type=null;
 						$this->status=JsonStatus::Normal;
 						$this->start=2;
+						//print_r($this->array);
+					}
+					//sub list,object as value
+					else if($this->char == '[' || $this->char == '{')
+					{
+						$continue=true;
+						$offset=$this->offset;
+						$sub_type=0;
+						$index=0;
+						$string="";
+						while($continue==true)
+						{
+							if($offset+2 > $this->length)
+							{
+								$continue=false;
+								//break;
+							}
+							$char=mb_substr($this->string,$offset,1);
+							$char_prev=mb_substr($this->string,$offset-1,1);
+							$string.=$char;
+							if($index == 0 && $char == '[')
+								$sub_type++;
+							else if($index == 0 && $char == '{')
+								$sub_type++;
+							if($index != 0)
+							{
+								if($char_prev != '\\' && $char == ']')
+								{
+									$sub_type--;
+								}
+								else if($char_prev != '\\' && $char == '}')
+								{
+									$sub_type--;
+								}
+								if($sub_type == 0)
+								{
+									$this->status=JsonStatus::Normal;
+									$this->start=0;//not begin
+									$o_key=$this->key;
+									$new_json=new json;
+									//print " =====> ". $string;
+									$value=$new_json->decode($string);
+									$this->item_append($o_key,$new_json->array,JsonType::Array);
+									$continue=false;
+									//break;
+								}
+							}
+							$offset++;
+							$index++;
+						}
+						$this->offset+=$index;
+						//item_append($this->key,$this->decode($this->char));
+						//$this->start=1;
 					}
 					//<number>
 					else if($this->value == '' && 
@@ -162,6 +256,7 @@ class Json
 					{
 						$this->offset+=3;
 						$this->value="true";
+						$this->value_type=JsonType::Boolean;
 						$this->type=JsonPosition::Value;
 					}
 					//false
@@ -169,6 +264,7 @@ class Json
 					{
 						$this->offset+=4;
 						$this->value="false";
+						$this->value_type=JsonType::Boolean;
 						$this->type=JsonPosition::Value;
 					}
 					else if($this->value == '' && $this->char == '"')
@@ -179,7 +275,7 @@ class Json
 					}
 					else
 					{
-						print ">>>" . $this->char."\n";
+						exit("Error!\nunknowm character '". $this->char . "'");
 					}
 				}
 				else if($this->status == JsonStatus::Number)
@@ -205,7 +301,7 @@ class Json
 						}
 						else if($this->value == '.')
 						{
-							$this->value.="0.";
+							$this->value="0.";
 							$this->type=JsonType::Fraction;
 						}
 						else if($this->char == '.' && $this->type == JSONTYPE::Fraction)
@@ -221,6 +317,10 @@ class Json
 						{
 							$this->value.=$this->char;
 						}
+						else
+						{
+							exit("Error!\nunknowm character '". $this->char . "' for a number!");
+						}
 					}
 				}
 				else if($this->status == JsonStatus::String)
@@ -232,7 +332,7 @@ class Json
 						$this->str=$this->string_escape($this->str);
 						if($this->type == JsonPosition::Key)
 						{
-							print "Key : " . $this->str."\n";
+							//print "Key : " . $this->str."\n";
 							$this->key=$this->str;
 							$this->status=JsonStatus::Normal;
 						}
@@ -249,7 +349,7 @@ class Json
 						$this->str.=$this->char;
 					}
 				}
-				//print "---".$this->char."\n";
+				print "---".$this->char."\n";
 			}
 		}
 	}
