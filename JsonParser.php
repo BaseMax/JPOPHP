@@ -157,6 +157,20 @@ class Json
 						$this->status=JsonStatus::Number;
 						$this->type=JsonPosition::Value;
 					}
+					//true
+					else if($this->value == '' && strtolower($this->char) == 't' && strtolower($this->char_next) == 'r' && strtolower($this->char_next_next) == 'u' && strtolower($this->char_next_next_next) == 'e')
+					{
+						$this->offset+=3;
+						$this->value="true";
+						$this->type=JsonPosition::Value;
+					}
+					//false
+					else if($this->value == '' && strtolower($this->char) == 'f' && strtolower($this->char_next) == 'a' && strtolower($this->char_next_next) == 'l' && strtolower($this->char_next_next_next) == 's' && strtolower($this->char_next_next_next_next) == 'e')
+					{
+						$this->offset+=4;
+						$this->value="false";
+						$this->type=JsonPosition::Value;
+					}
 					else if($this->value == '' && $this->char == '"')
 					{
 						$this->value_type=JsonType::String;
@@ -170,7 +184,6 @@ class Json
 				}
 				else if($this->status == JsonStatus::Number)
 				{
-					print "===".$this->char."\n";
 					if($this->char == ',' || $this->char == ']' || $this->char == '}')
 					{
 						$this->offset--;
@@ -182,7 +195,7 @@ class Json
 						{
 							$this->number_x=-1;
 						}
-						else if($this->number_x == 1 && $this->char == '-')
+						if($this->number_x == 1 && $this->char == '-')
 						{
 							exit("Error!\nCan not use `-` character between a number! , only can in the first!");
 						}
@@ -236,7 +249,7 @@ class Json
 						$this->str.=$this->char;
 					}
 				}
-				print "---".$this->char."\n";
+				//print "---".$this->char."\n";
 			}
 		}
 	}
