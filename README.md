@@ -15,11 +15,9 @@ Tiny Library for parse JSON.
 
 ## Type of supported values
   
-  - [x] Positive decimal number
-  - [x] Negative decimal number
-  - [x] Positive integer
-  - [x] Negative integer
-  - [x] Boolean
+  - [x] Integer
+  - [x] Float
+  - [x] Boolean (`true` , `false`)
   - [x] String
   - [ ] Char 
   - [x] Sub Array
