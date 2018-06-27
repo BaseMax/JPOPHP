@@ -68,6 +68,7 @@ However, there is always way for improvement.
 2th Time : 0.0028131008148193 elapsed
 3th Time : 0.0013258457183838 elapsed
 4th Time : 0.0026090145111084 elapsed
+-------------------------------------
 Sigma Time : 0.008204937
 Average Time : 0.008204937 ÷ 4 = 0.002051234
 ```
@@ -79,6 +80,7 @@ Average Time : 0.008204937 ÷ 4 = 0.002051234
 2th Time : 0.43391299247742 elapsed
 3th Time : 0.44072198867798 elapsed
 4th Time : 0.43309497833252 elapsed
+-------------------------------------
 Sigma Time : 1.750139952
 Average Time : 1.750139952 ÷ 4 = 0.437534988
 ```
