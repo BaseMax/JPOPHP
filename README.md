@@ -58,7 +58,9 @@ Competition between `json_encode(...)` and `$json->encode(...)`
 
 
 The basic PHP functions are written in C itself.
+
 Do not expect to reach it quickly.
+
 However, there is always way for improvement.
 
 
