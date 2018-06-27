@@ -32,7 +32,7 @@ Tiny Library for parse JSON.
 
 ## Usage
 
-All public functions are accessible through the $ json variable.
+All public functions are accessible through the `$json` variable.
 
 - `array $json->decode(string);`
 - `string $json->encode(array);`
