@@ -71,6 +71,7 @@ However, there is always way for improvement.
 Sigma Time : 0.008204937
 Average Time : 0.008204937 ÷ 4 = 0.002051234
 ```
+[View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-php.php)
 
 #### Own function `$json->encode()`
 ```
@@ -81,6 +82,9 @@ Average Time : 0.008204937 ÷ 4 = 0.002051234
 Sigma Time : 1.750139952
 Average Time : 1.750139952 ÷ 4 = 0.437534988
 ```
+
+[View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-own.php)
+
 
 # License
 
