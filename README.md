@@ -1,7 +1,7 @@
 # JsonParser
 Tiny Library for parse JSON.
 
-![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-None%20KB-blue.svg) ![JsonParser.min.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
+![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-6.6%20KB-blue.svg) ![JsonParser.min.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
 
 
 ## Features 
