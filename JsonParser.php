@@ -285,7 +285,7 @@ class Json
 					}
 					else
 					{
-						exit("Error!\nunknowm character '". $this->char . "'");
+						exit("Error!\nunknown character '". $this->char . "'");
 					}
 				}
 				else if($this->status == JsonStatus::Number)
