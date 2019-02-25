@@ -22,12 +22,19 @@ Tiny Library for parse JSON.
 ## Type of supported values
   
   - [x] Integer
+
   - [x] Float
+
   - [x] Boolean (`true` , `false`)
+
   - [x] String
+
   - [ ] Char 
+
   - [x] Sub Array
+
   - [ ] Sub Object
+
 
 ## Unfinished items
   
