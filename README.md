@@ -4,14 +4,20 @@ Tiny Library for parse JSON.
 ![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-6.6%20KB-blue.svg) ![JsonParser.min.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
 
 
-## Features 
-  - Small and light library
-  - Hand-coded scanner
-  - Analyze and found Errors
-  - Poor speed and performance
-  - No dependencies (only suitable version of the `PHP`)
-  - Written and run on `PHP 7.2.6`
+## Features
 
+  - Small and light library
+
+  - Hand-coded scanner
+
+  - Analyze and found Errors
+
+  - Poor speed and performance
+
+  - No dependencies (only suitable version of the `PHP`)
+
+  - Written and run on `PHP 7.2.6`
+  
 
 ## Type of supported values
   
