@@ -43,15 +43,11 @@ All public functions are accessible through the `$json` variable.
 | encode() |     String   |  Array  |
 | decode() |     Array  |  String   |
 
-
-
-
 ## Samples
 
 To view the full details, run the [Example.php](https://github.com/BaseMax/JsonParser/blob/master/Example.php) file.
 
 ## Performance
-
 
 Competition between `json_encode(...)` and `$json->encode(...)`
 
@@ -87,7 +83,6 @@ Average Time : 1.750139952 ÷ 4 = 0.437534988
 ```
 
 [View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-own.php)
-
 
 # License
 
