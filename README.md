@@ -6,18 +6,12 @@ Tiny Library for parse JSON.
 
 ## Features
 
-  - Small and light library
-
-  - Hand-coded scanner
-
-  - Analyze and found Errors
-
-  - Poor speed and performance
-
-  - No dependencies (only suitable version of the `PHP`)
-
-  - Written and run on `PHP 7.2.6`
-  
+- Small and light library
+- Hand-coded scanner
+- Analyze and found Errors
+- Poor speed and performance
+- No dependencies (only suitable version of the `PHP`)
+- Written and run on `PHP 7.2.6`
 
 ## Type of supported values
   
