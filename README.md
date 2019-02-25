@@ -23,14 +23,12 @@ Tiny Library for parse JSON.
 - [x] Sub Array
 - [ ] Sub Object
 
-
 ## Unfinished items
   
 - `encode()` function
 - Improve speed and performance (Speed does not reach `C Language`!)
 - Fix bugs of arrays in arrays (Tree Array)
   
-
 ## Usage
 
 All public functions are accessible through the `$json` variable.
