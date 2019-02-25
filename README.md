@@ -54,8 +54,8 @@ All public functions are accessible through the `$json` variable.
 
 | Function | Return Type | Argument |
 | -------- | ----------- | -------- |
-| encode() |     Array   |  String  |
-| decode() |     String  |  Array   |
+| encode() |     String   |  Array  |
+| decode() |     Array  |  String   |
 
 
 
