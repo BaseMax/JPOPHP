@@ -9,9 +9,6 @@
 * @Repository : https://github.com/BaseMax/JsonParser
 *
 **/
-$input=" {156}";
-$length=strlen($input);
-$index=0;
 /*
 Arrays are :
     associative or sequential
@@ -37,6 +34,9 @@ function encodeValue($value){
     else if(is_array($value) === true){//array
         return encode($value);
     }
+    else{
+        return false;
+    }
 }
 function encode($array){
     $response="";
@@ -45,45 +45,56 @@ function encode($array){
         $array_type=isAssociative($array) ? "associative" : "sequential";
         if($array_type == "associative"){//object
             $response.="{";
-            $count = count($array);
-            $index = 0;
-            foreach($array as $key=>$value){
+        }else{
+            $response.="[";
+        }
+        $count = count($array);
+        $index = 0;
+        foreach($array as $key=>$value){
+            if($array_type == "associative"){//object
                 $response.="\"";
                 $response.=$key;
                 $response.="\"";
                 $response.=":";
-                $response.=encodeValue($value);
-                // if(is_array($value)){
-                //     $response.=encode($value);
-                // }else{
-                //     $response.=encodeValue($value);
-                // }
-                if(++$index !== $count){
-                    $response.=",";
-                }
             }
-            $response.="}";
+            if($value === true || $value === false){//bool
+                $response.=$value;
+            }
+            else if($value === null){//null
+                $response.=$value;
+            }
+            else if(is_numeric($value) === true){//number
+                $response.=$value;
+            }
+            else if(is_string($value) === true){//string
+                $response.="\"".$value."\"";
+            }
+            else if(is_array($value) === true){//array
+                $response.=encode($value);
+            }
+            else{
+                print "Error: Unknowm type!\n";
+                break;
+            }
+            // if(is_array($value)){
+            //     $response.=encode($value);
+            // }else{
+            //     $response.=encodeValue($value);
+            // }
+            if(++$index !== $count){
+                $response.=",";
+            }
         }
-        else{//array
-            $response.="[";
-            $count = count($array);
-            $index = 0;
-            foreach($array as $key=>$value){
-                $response.=encodeValue($value);
-                // if(is_array($value)){
-                //     $response.=encode($value);
-                // }else{
-                //     $response.=encodeValue($value);
-                // }
-                if(++$index !== $count){
-                    $response.=",";
-                }
-            }
+        if($array_type == "associative"){//object
+            $response.="}";
+        }else{
             $response.="]";
         }
     }
-    $response.="\n";
+    // $response.="\n";
     return $response;
 }
-print encode([1,2,3,4]);
-print encode([1,2,[94,15,34,67],3,4,["name"=>"max"]]);
+print encode([1,2,3,4])."\n";
+print encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
+
+
