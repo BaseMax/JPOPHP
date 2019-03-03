@@ -96,5 +96,9 @@ function encode($array){
 }
 print encode([1,2,3,4])."\n";
 print encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
+print encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
+print encode(["0"=>"max","1"=>49,"2"=>"BaseMax"])."\n";
+print encode([0=>"max",1=>49,2=>"BaseMax"])."\n";
+print encode([0=>"max","1.5"=>49,2=>"BaseMax"])."\n";
 
 
