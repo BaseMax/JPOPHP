@@ -47,6 +47,111 @@ All public functions are accessible through the `$json` variable.
 
 To view the full details, run the [Example.php](https://github.com/BaseMax/JsonParser/blob/master/Example.php) file.
 
+
+## JSON Grammar
+
+- json
+    - element
+
+- value
+    - object
+    - array
+    - string
+    - number
+    - "true"
+    - "false"
+    - "null"
+
+- object
+    - '{' ws '}'
+    - '{' members '}'
+
+- members
+    - member
+    - member ',' members
+
+- member
+    - ws string ws ':' element
+
+- array
+    - '[' ws ']'
+    - '[' elements ']'
+
+- elements
+    - element
+    - element ',' elements
+
+- element
+    - ws value ws
+
+- string
+    - '"' characters '"'
+
+- characters
+    - ""
+    - character characters
+
+- character
+    - '0020' . '10ffff' - '"' - '\'
+    - '\' escape
+
+- escape
+    - '"'
+    - '\'
+    - '/'
+    - 'b'
+    - 'n'
+    - 'r'
+    - 't'
+    - 'u' hex hex hex hex
+
+- hex
+    - digit
+    - 'A' . 'F'
+    - 'a' . 'f'
+
+- number
+    - int frac exp
+
+- int
+    - digit
+    - onenine digits
+    - '-' digit
+    - '-' onenine digits
+
+- digits
+    - digit
+    - digit digits
+
+- digit
+    - '0'
+    - onenine
+
+- onenine
+    - '1' . '9'
+
+- frac
+    - ""
+    - '.' digits
+
+- exp
+    - ""
+    - 'E' sign digits
+    - 'e' sign digits
+
+- sign
+    - ""
+    - '+'
+    - '-'
+
+- ws
+    - ""
+    - '0009' ws
+    - '000A' ws
+    - '000D' ws
+    - '0020' ws
+
+
 ## Performance
 
 Competition between `json_encode(...)` and `$json->encode(...)`
