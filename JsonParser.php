@@ -4,7 +4,7 @@
 * @Name : JsonParser
 * @Version : 2.1
 * @Programmer : Max
-* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24
+* @Date : 2018-06-26, 2018-06-27, 2019-03-23
 * @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
 * @Repository : https://github.com/BaseMax/JsonParser
 *
@@ -290,7 +290,15 @@ class Json {
 					}
 					else {
 						//error
-						exit("NoneValue founded!\n");
+						if($token[0] === TokenType::TokenSplit) {
+							while($token[0] === TokenType::TokenSplit) {
+								$token=$this->nextToken();
+							}
+							continue;
+						}
+						else {
+							exit("NoneValue founded!\n");
+						}
 					}
 					$token=$this->nextToken();
 					//only allowed for object,not array!
@@ -374,5 +382,8 @@ print "\n\n";
 // print_r($json->decode('			  [  -3.145,4,"test","name":"max"]'));
 print_r($json->decode('			  [  -3.145,4,"name","max",]'));
 print_r($json->decode('			  [  -3.145,4,"name","max",,,,,,,]'));
+print_r($json->decode('			  [,]'));
+print_r($json->decode('			  [,,,,]'));
+print_r($json->decode('			  [,,,,4]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
 */
