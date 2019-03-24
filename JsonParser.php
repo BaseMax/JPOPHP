@@ -4,7 +4,7 @@
 * @Name : JsonParser
 * @Version : 2.1
 * @Programmer : Max
-* @Date : 2018-06-26, 2018-06-27, 2019-03-23
+* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24
 * @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
 * @Repository : https://github.com/BaseMax/JsonParser
 *
@@ -116,7 +116,7 @@ class Json {
 	public $input="";
 	public $index=0;
 	function nextToken() {
-		if($this->index >= $this->length) {
+		if($this->index + 1 > $this->length) {
 			return [TokenType::TokenEOF,null];
 		}
 		$character=$this->input[$this->index];
@@ -308,7 +308,9 @@ class Json {
 					}
 					// else if($arrayOpen)
 					if($token[0] == TokenType::TokenSplit) {
-						$token=$this->nextToken();
+						while($token[0] === TokenType::TokenSplit) {
+							$token=$this->nextToken();
+						}
 					}
 					else {
 						// print_r($a);
@@ -371,6 +373,6 @@ print "\n\n";
 // print_r($json->decode('			  [  -3.145,4,"test"]'));
 // print_r($json->decode('			  [  -3.145,4,"test","name":"max"]'));
 print_r($json->decode('			  [  -3.145,4,"name","max",]'));
-print_r($json->decode('			  [  -3.145,4,"name","max"]'));
+print_r($json->decode('			  [  -3.145,4,"name","max",,,,,,,]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
 */
