@@ -9,6 +9,10 @@
 * @Repository : https://github.com/BaseMax/JsonParser
 *
 **/
+abstract class JsonType {
+	const JsonArray=0;
+	const JsonObject=1;
+}
 abstract class TokenType {
 	const TokenEOF=-1;
 	const TokenArrayOpen=0;
@@ -18,6 +22,7 @@ abstract class TokenType {
 	const TokenString=4;
 	const TokenNumber=5;
 	const TokenSplit=6;
+	const TokenPair=7;
 }
 class Json {
 	/*
@@ -115,6 +120,10 @@ class Json {
 			return [TokenType::TokenEOF,null];
 		}
 		$character=$this->input[$this->index];
+		while($character == ' ' || $character == '	' || $character == '\n') {
+			$this->index++;
+			$character=$this->input[$this->index];
+		}
 		if($character == '{') {
 			$this->index++;
 			return [TokenType::TokenObjectOpen,null];
@@ -134,6 +143,10 @@ class Json {
 		else if($character == ',') {
 			$this->index++;
 			return [TokenType::TokenSplit,null];
+		}
+		else if($character == ':') {
+			$this->index++;
+			return [TokenType::TokenPair,null];
 		}
 		else if($character == '"') {
 			$result="";
@@ -229,13 +242,98 @@ class Json {
 		}
 		return [TokenType::TokenEOF,null];
 	}
+	function isValue($token) {
+		if($token[0] === TokenType::TokenNumber) {
+			return true;
+		}
+		else if($token[0] === TokenType::TokenString) {
+			return true;
+		}
+		return false;
+	}
 	function decode($input) {
+		$this->index=0;
 		$this->input=$input;
 		$this->length=mb_strlen($input);
-		$result="";
+		$result=[];
 		$token=$this->nextToken();
-		while($token[0] != TokenType::TokenEOF) {
-			$result.=$token[0]." => ".$token[1]."\n";
+		// $arrayOpen=false;
+		// $objectOpen=false;
+		$type=null;
+		while($token[0] !== TokenType::TokenEOF) {
+			// $result[]=$token[0]." => ".$token[1]."\n";
+			// $result.=$token[0]." => ".$token[1]."\n";
+			// $result[]=$token[0]." => ".$token[1];
+			// [
+			if($token[0] === TokenType::TokenArrayOpen || $token[0] === TokenType::TokenObjectOpen) {
+				// $arrayOpen=true;
+				if($token[0] === TokenType::TokenArrayOpen) {
+					$type=JsonType::JsonArray;
+				}
+				else if($token[0] === TokenType::TokenObjectOpen) {
+					$type=JsonType::JsonObject;
+				}
+				$token=$this->nextToken();
+				$a=[];
+				while(
+					($type === JsonType::JsonObject && $token[0] != TokenType::TokenObjectClose) ||
+					($type === JsonType::JsonArray && $token[0] != TokenType::TokenArrayClose)
+				) {
+					$first=null;
+					$second=null;
+					$haskey=false;
+					if($this->isValue($token)) {
+						$first=$token;
+					}
+					else {
+						//error
+						exit("NoneValue founded!\n");
+					}
+					$token=$this->nextToken();
+					//only allowed for object,not array!
+					if($type === JsonType::JsonObject && $token[0] == TokenType::TokenPair) {
+						$token=$this->nextToken();
+						if($this->isValue($token)) {
+							$second=$token;
+							$haskey=true;
+						}
+						else {
+							//error
+						}
+						$token=$this->nextToken();
+						print_r($token);
+					}
+					// else if($arrayOpen)
+					if($token[0] == TokenType::TokenSplit) {
+						$token=$this->nextToken();
+					}
+					else {
+						// print_r($a);
+						// exit("Error!\n");
+						// //error
+						// //may be last item of the array
+						if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
+
+						}
+						else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
+
+						}
+						else {
+							print_r($a);
+							exit("Error!\n");
+						}
+					}
+					if($haskey === false) {
+						$a[]=$first[1];
+					}
+					else {
+						$a[$first[1]]=$second[1];
+					}
+				}
+				$result=$a;
+				// $token[0]." => ".$token[1];
+				// $arrayOpen=false;
+			}
 			$token=$this->nextToken();
 		}
 		return $result;
@@ -267,6 +365,9 @@ print "\n\n";
 // print $json->decode('[-945]')."\n";
 // print $json->decode('[3.1]')."\n";
 // print $json->decode('[3.145]')."\n";
-print $json->decode('[-3.145,4,"test"]')."\n";
+// print_r($json->decode('			  [  -3.145,4,"test"]'));
+// print_r($json->decode('			  [  -3.145,4,"test","name":"max"]'));
+print_r($json->decode('			  [  -3.145,4,"name","max",]'));
+print_r($json->decode('			  [  -3.145,4,"name","max"]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
 */
