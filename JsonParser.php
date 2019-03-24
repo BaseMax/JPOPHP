@@ -237,3 +237,28 @@ class Json {
 		return $result;
 	}
 }
+$json=new Json;
+print $json->encode([1,2,3,4])."\n";
+print $json->encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
+print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
+print $json->encode(["0"=>"max","1"=>49,"2"=>"BaseMax"])."\n";
+print $json->encode([0=>"max",1=>49,2=>"BaseMax"])."\n";
+print $json->encode([0=>"max","1.5"=>49,2=>"BaseMax"])."\n";
+print "\n\n";
+// print $json->decode('[]')."\n";
+// print $json->decode('{}')."\n";
+// print $json->decode('["1"]')."\n";
+// print $json->decode('["123456"]')."\n";
+// print $json->decode('["hi"]')."\n";
+// print $json->decode('["hi\""]')."\n";
+// print $json->decode('["hi\"!"]')."\n";
+// print $json->decode('[13]')."\n";
+// print $json->decode('[134]')."\n";
+// print $json->decode('[8]')."\n";
+// print $json->decode('[0]')."\n";
+// print $json->decode('[-9]')."\n";
+// print $json->decode('[-945]')."\n";
+// print $json->decode('[3.1]')."\n";
+// print $json->decode('[3.145]')."\n";
+print $json->decode('[-3.145]')."\n";
+// print $json->decode('["max",49,"BaseMax"]')."\n";
