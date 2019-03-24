@@ -121,6 +121,9 @@ class Json {
 		}
 		$character=$this->input[$this->index];
 		while($character == ' ' || $character == '	' || $character == '\n') {
+			if($this->index + 1 === $this->length) {
+				break;
+			}
 			$this->index++;
 			$character=$this->input[$this->index];
 		}
