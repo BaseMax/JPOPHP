@@ -238,6 +238,7 @@ class Json {
 	}
 }
 $json=new Json;
+/*
 print $json->encode([1,2,3,4])."\n";
 print $json->encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
 print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
@@ -262,3 +263,4 @@ print "\n\n";
 // print $json->decode('[3.145]')."\n";
 print $json->decode('[-3.145]')."\n";
 // print $json->decode('["max",49,"BaseMax"]')."\n";
+*/
