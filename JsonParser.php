@@ -17,6 +17,7 @@ abstract class TokenType {
 	const TokenObjectClose=3;
 	const TokenString=4;
 	const TokenNumber=5;
+	const TokenSplit=6;
 }
 class Json {
 	/*
@@ -130,6 +131,10 @@ class Json {
 			$this->index++;
 			return [TokenType::TokenArrayClose,null];
 		}
+		else if($character == ',') {
+			$this->index++;
+			return [TokenType::TokenSplit,null];
+		}
 		else if($character == '"') {
 			$result="";
 			$characterPrev="";
@@ -217,7 +222,6 @@ class Json {
 				$result*=-1;
 			}
 			// $this->index++;
-			print "===> ".$result."\n";
 			return [TokenType::TokenNumber,$result];
 		}
 		else {
@@ -245,7 +249,9 @@ print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
 print $json->encode(["0"=>"max","1"=>49,"2"=>"BaseMax"])."\n";
 print $json->encode([0=>"max",1=>49,2=>"BaseMax"])."\n";
 print $json->encode([0=>"max","1.5"=>49,2=>"BaseMax"])."\n";
+
 print "\n\n";
+
 // print $json->decode('[]')."\n";
 // print $json->decode('{}')."\n";
 // print $json->decode('["1"]')."\n";
@@ -261,6 +267,6 @@ print "\n\n";
 // print $json->decode('[-945]')."\n";
 // print $json->decode('[3.1]')."\n";
 // print $json->decode('[3.145]')."\n";
-print $json->decode('[-3.145]')."\n";
+print $json->decode('[-3.145,4,"test"]')."\n";
 // print $json->decode('["max",49,"BaseMax"]')."\n";
 */
