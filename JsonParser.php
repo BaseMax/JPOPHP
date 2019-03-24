@@ -207,7 +207,7 @@ class Json {
 					$bitflag=true;
 				}
 				else if($bitflag === true && $character === '-') {
-					//error
+					// Error
 				}
 				else {
 					if($bitfloat === false && $character == '.') {
@@ -215,7 +215,7 @@ class Json {
 						// $bitfloatindex=0;
 					}
 					else if($bitflag === true && $character == '.') {
-						//error
+						// Error
 					}
 					else if($bitflag === true && ($character == 'e' || $character == 'E')) {
 						//soon
@@ -289,30 +289,44 @@ class Json {
 						$first=$token;
 					}
 					else {
-						//error
 						if($token[0] === TokenType::TokenSplit) {
+							$token=$this->nextToken();
 							while($token[0] === TokenType::TokenSplit) {
 								$token=$this->nextToken();
 							}
 							continue;
 						}
 						else {
+							// Error
 							exit("NoneValue founded!\n");
 						}
 					}
 					$token=$this->nextToken();
-					//only allowed for object,not array!
-					if($type === JsonType::JsonObject && $token[0] == TokenType::TokenPair) {
-						$token=$this->nextToken();
-						if($this->isValue($token)) {
-							$second=$token;
-							$haskey=true;
+					// Only allowed for object, not array!
+					if($type === JsonType::JsonObject) {
+						if($token[0] == TokenType::TokenPair) {
+							$token=$this->nextToken();
+							if($first[0] === TokenType::TokenString) {// Pair key must be string
+								if($this->isValue($token)) {
+									$second=$token;
+									$haskey=true;
+								}
+								else {
+									// Error
+									exit("NoneValue as PairValue!\n");
+								}
+								$token=$this->nextToken();
+								// print_r($token);
+							}
+							else {
+								// Error
+								exit("PairKey Was not String!\n");
+							}
 						}
 						else {
-							//error
+							// Error
+							exit("All item of object should was pair value (both of the key and value)!\n");
 						}
-						$token=$this->nextToken();
-						print_r($token);
 					}
 					// else if($arrayOpen)
 					if($token[0] == TokenType::TokenSplit) {
@@ -323,8 +337,8 @@ class Json {
 					else {
 						// print_r($a);
 						// exit("Error!\n");
-						// //error
-						// //may be last item of the array
+						// // Error
+						// // May be last item of the array
 						if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
 
 						}
@@ -360,9 +374,7 @@ print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
 print $json->encode(["0"=>"max","1"=>49,"2"=>"BaseMax"])."\n";
 print $json->encode([0=>"max",1=>49,2=>"BaseMax"])."\n";
 print $json->encode([0=>"max","1.5"=>49,2=>"BaseMax"])."\n";
-
 print "\n\n";
-
 // print $json->decode('[]')."\n";
 // print $json->decode('{}')."\n";
 // print $json->decode('["1"]')."\n";
@@ -385,5 +397,8 @@ print_r($json->decode('			  [  -3.145,4,"name","max",,,,,,,]'));
 print_r($json->decode('			  [,]'));
 print_r($json->decode('			  [,,,,]'));
 print_r($json->decode('			  [,,,,4]'));
+print_r($json->decode('{}'));
+print_r($json->decode('{"a":4,"6":945,,,}'));
+print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
 */
