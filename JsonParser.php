@@ -362,22 +362,22 @@ class Json {
 				if($token[0] === TokenType::TokenArrayOpen) {
 					$type=JsonType::JsonArray;
 					// $this->tree++;
-					print "--> Open\n";
+					// print "--> Open\n";
 					$this->tree[]=$type;
 				}
 				else if($token[0] === TokenType::TokenObjectOpen) {
 					$type=JsonType::JsonObject;
 					// $this->tree++;
-					print "--> Open\n";
+					// print "--> Open\n";
 					$this->tree[]=$type;
 				}
 				$token=$this->nextToken();
 				$a=[];
-				print_r($token);
+				// print_r($token);
 				if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
 					// ;
 					// $this->tree--;
-					print "--> Close\n";
+					// print "--> Close\n";
 					unset($this->tree[count($this->tree)-1]);
 					if(count($this->tree) == 0) {
 						return $a;
@@ -386,7 +386,7 @@ class Json {
 				else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
 					// ;
 					// $this->tree--;
-					print "--> Close\n";
+					// print "--> Close\n";
 					unset($this->tree[count($this->tree)-1]);
 					if(count($this->tree) == 0) {
 						return $a;
@@ -441,6 +441,12 @@ class Json {
 							exit("All item of object should was pair value (both of the key and value)!\n");
 						}
 					}
+					if($haskey === false) {
+						$a[]=$first[1];
+					}
+					else {
+						$a[$first[1]]=$second[1];
+					}
 					// else if($arrayOpen)
 					if($token[0] == TokenType::TokenSplit) {
 						$token=$this->nextToken();
@@ -456,7 +462,7 @@ class Json {
 						if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
 							// ;
 							// $this->tree--;
-							print "--> Close\n";
+							// print "--> Close\n";
 							unset($this->tree[count($this->tree)-1]);
 							if(count($this->tree) == 0) {
 								return $a;
@@ -465,7 +471,7 @@ class Json {
 						else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
 							// ;
 							// $this->tree--;
-							print "--> Close\n";
+							// print "--> Close\n";
 							unset($this->tree[count($this->tree)-1]);
 							if(count($this->tree) == 0) {
 								return $a;
@@ -477,12 +483,6 @@ class Json {
 							// print_r($token);
 							exit("Error!\n");
 						}
-					}
-					if($haskey === false) {
-						$a[]=$first[1];
-					}
-					else {
-						$a[$first[1]]=$second[1];
 					}
 				}
 				$result=$a;
@@ -530,6 +530,6 @@ $json=new Json;
 // print_r($json->decode('{,"a":4,}'));
 // print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
 // print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
-// print_r($json->decode('[1,]'));
+print_r($json->decode('[1,]'));
 print_r($json->decode('[4]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
