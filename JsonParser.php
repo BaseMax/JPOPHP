@@ -526,10 +526,11 @@ $json=new Json;
 // print_r($json->decode('			  [,,,,4]'));
 // print_r($json->decode('{}'));
 // print_r($json->decode('{"a":4,"6":945,,,}'));
-// print_r($json->decode('{"a":4,"b":456,,,,}'));
-// print_r($json->decode('{,"a":4,}'));
-// print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
-// print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
+print_r($json->decode('{"a":4,"b":456,,,,}'));
+print_r($json->decode('{,"a":4,}'));
+print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
+print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
 print_r($json->decode('[1,]'));
 print_r($json->decode('[4]'));
-// print $json->decode('["max",49,"BaseMax"]')."\n";
+print_r($json->decode('["max",49,"BaseMax"]'));
+
