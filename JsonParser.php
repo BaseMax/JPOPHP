@@ -115,6 +115,58 @@ class Json {
 	public $length=0;
 	public $input="";
 	public $index=0;
+	function nextsIf($characterIf) {
+		$character=$this->input[$this->index];
+		if(is_array($characterIf)) {
+			while(in_array($character,$characterIf)) {
+				if($this->index + 1 === $this->length) {
+					break;
+				}
+				$this->index++;
+				$character=$this->input[$this->index];
+			}
+		}
+		else {
+			while($character == $characterIf) {
+				if($this->index + 1 === $this->length) {
+					break;
+				}
+				$this->index++;
+				$character=$this->input[$this->index];
+			}
+		}
+	}
+	function nextIf($characterIf) {
+		$character=$this->input[$this->index];
+		if(is_array($characterIf)) {
+			if(in_array($character,$characterIf)) {
+				if($this->index + 1 === $this->length) {
+					break;
+				}
+				$this->index++;
+				// $character=$this->input[$this->index];
+			}
+		}
+		else {
+			if($character == $characterIf) {
+				if($this->index + 1 === $this->length) {
+					break;
+				}
+				$this->index++;
+				// $character=$this->input[$this->index];
+			}
+		}
+	}
+	function skip($token) {
+		if($token[0] === TokenType::TokenSplit) {
+			$token=$this->nextToken();
+		}
+	}
+	function skips($token) {
+		while($token[0] === TokenType::TokenSplit) {
+			$token=$this->nextToken();
+		}
+	}
 	function nextToken() {
 		if($this->index + 1 > $this->length) {
 			return [TokenType::TokenEOF,null];
@@ -479,3 +531,4 @@ $json=new Json;
 // print_r($json->decode('[1,]'));
 // print_r($json->decode('[4]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
+
