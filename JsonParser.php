@@ -4,7 +4,7 @@
 * @Name : JsonParser
 * @Version : 2.1
 * @Programmer : Max
-* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-003-24
+* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24, 2019-03-26
 * @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
 * @Repository : https://github.com/BaseMax/JsonParser
 *
@@ -259,7 +259,7 @@ class Json {
 			// $result=[];
 			$result=$this->decode(null,false);
 			// while($token[0] != TokenType::TokenObjectClose) {
-			//	
+				
 			// }
 			return [true,$result];
 			// return true;
@@ -267,6 +267,11 @@ class Json {
 		else if($token[0] === TokenType::TokenArrayOpen) {
 			// $tree=0;
 			// $result=[];
+
+			// print $this->input."\n";
+			// print $this->index."\n";
+			// print $this->input[$this->index]."\n";
+
 			$result=$this->decode(null,false);
 			// while($token[0] != TokenType::TokenObjectClose) {
 			//	
@@ -282,9 +287,14 @@ class Json {
 			$this->index=0;
 			$this->input=$input;
 			$this->length=mb_strlen($input);
+			// $this->tree=null;
+		}
+		else {
+			// $this->tree=0;
 		}
 		$result=[];
 		$token=$this->nextToken();
+		// print_r($token);
 		// $arrayOpen=false;
 		// $objectOpen=false;
 		$type=null;
@@ -297,12 +307,37 @@ class Json {
 				// $arrayOpen=true;
 				if($token[0] === TokenType::TokenArrayOpen) {
 					$type=JsonType::JsonArray;
+					// $this->tree++;
+					print "--> Open\n";
+					$this->tree[]=$type;
 				}
 				else if($token[0] === TokenType::TokenObjectOpen) {
 					$type=JsonType::JsonObject;
+					// $this->tree++;
+					print "--> Open\n";
+					$this->tree[]=$type;
 				}
 				$token=$this->nextToken();
 				$a=[];
+				print_r($token);
+				if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
+					// ;
+					// $this->tree--;
+					print "--> Close\n";
+					unset($this->tree[count($this->tree)-1]);
+					if(count($this->tree) == 0) {
+						return $a;
+					}
+				}
+				else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
+					// ;
+					// $this->tree--;
+					print "--> Close\n";
+					unset($this->tree[count($this->tree)-1]);
+					if(count($this->tree) == 0) {
+						return $a;
+					}
+				}
 				while(
 					($type === JsonType::JsonObject && $token[0] != TokenType::TokenObjectClose) ||
 					($type === JsonType::JsonArray && $token[0] != TokenType::TokenArrayClose)
@@ -347,7 +382,7 @@ class Json {
 							}
 						}
 						else {
-							print_r($token);
+							// print_r($token);
 							// Error
 							exit("All item of object should was pair value (both of the key and value)!\n");
 						}
@@ -366,12 +401,26 @@ class Json {
 						// // May be last item of the array
 						if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
 							// ;
+							// $this->tree--;
+							print "--> Close\n";
+							unset($this->tree[count($this->tree)-1]);
+							if(count($this->tree) == 0) {
+								return $a;
+							}
 						}
 						else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
 							// ;
+							// $this->tree--;
+							print "--> Close\n";
+							unset($this->tree[count($this->tree)-1]);
+							if(count($this->tree) == 0) {
+								return $a;
+							}
 						}
 						else {
-							print_r($a);
+							print_r($this->tree);
+							// print_r($a);
+							// print_r($token);
 							exit("Error!\n");
 						}
 					}
@@ -428,5 +477,5 @@ $json=new Json;
 // print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
 // print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
 // print_r($json->decode('[1,]'));
+// print_r($json->decode('[4]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
-
