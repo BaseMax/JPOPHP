@@ -141,7 +141,8 @@ class Json {
 		if(is_array($characterIf)) {
 			if(in_array($character,$characterIf)) {
 				if($this->index + 1 === $this->length) {
-					break;
+					return;
+					// break;
 				}
 				$this->index++;
 				// $character=$this->input[$this->index];
@@ -150,7 +151,8 @@ class Json {
 		else {
 			if($character == $characterIf) {
 				if($this->index + 1 === $this->length) {
-					break;
+					return;
+					// break;
 				}
 				$this->index++;
 				// $character=$this->input[$this->index];
@@ -529,6 +531,5 @@ $json=new Json;
 // print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
 // print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
 // print_r($json->decode('[1,]'));
-// print_r($json->decode('[4]'));
+print_r($json->decode('[4]'));
 // print $json->decode('["max",49,"BaseMax"]')."\n";
-
