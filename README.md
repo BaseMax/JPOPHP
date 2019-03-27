@@ -21,7 +21,7 @@ Tiny Library for parse JSON.
 - [x] String
 - [ ] Char 
 - [x] Sub Array
-- [ ] Sub Object
+- [x] Sub Object
 
 ## Unfinished items
 
