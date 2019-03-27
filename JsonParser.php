@@ -2,29 +2,113 @@
 /**
 *
 * @Name : JsonParser
-* @Version : 2.1
+* @Version : 2.2
 * @Programmer : Max
-* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24, 2019-03-26
+* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24, 2019-03-26, 2019-03-27
 * @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
 * @Repository : https://github.com/BaseMax/JsonParser
 *
 **/
 abstract class JsonType {
+	// []
 	const JsonArray=0;
+	// {}
 	const JsonObject=1;
 }
 abstract class TokenType {
+	// end of file, end of command, end of input string
 	const TokenEOF=-1;
+	// {
 	const TokenArrayOpen=0;
+	// }
 	const TokenArrayClose=1;
+	// [
 	const TokenObjectOpen=2;
+	// ]
 	const TokenObjectClose=3;
+	// "...", '...'
 	const TokenString=4;
+	// <int>, <float>, -<int>, -<float>, ...
 	const TokenNumber=5;
+	// ,
 	const TokenSplit=6;
+	// :
 	const TokenPair=7;
+	// null
+	const TokenNull=8;
+	// true, false
+	const TokenBool=9;
 }
 class Json {
+	/**
+	 * 
+	 * Public variable for whole of the class
+	 *
+ 	 */
+	// token type of current state in decode()
+	public $token=null;
+	// length and last index of the input, it update using decode()
+	public $length=0;
+	// input string, it update using decode()
+	public $input="";
+	// current state and index of pointer at the input string
+	public $index=0;
+
+ 	/**
+ 	 * @function typeToken($token)
+ 	 * argument: $token
+ 	 * return : @string
+	 */
+	function typeToken($token) {
+		switch($token[0]) {
+			// EOF
+			case TokenType::TokenEOF:
+				return "EOF";
+			break;
+			// [
+			case TokenType::TokenArrayOpen:
+				return "ArrayOpen";
+			break;
+			// ]
+			case TokenType::TokenArrayClose:
+				return "ArrayClose";
+			break;
+			// {
+			case TokenType::TokenObjectOpen:
+				return "ObjectOpen";
+			break;
+			// }
+			case TokenType::TokenObjectClose:
+				return "ObjectClose";
+			break;
+			// "...", '...'
+			case TokenType::TokenString:
+				return "String";
+			break;
+			// number
+			case TokenType::TokenNumber:
+				return "Number";
+			break;
+			// ,
+			case TokenType::TokenSplit:
+				return "Split";
+			break;
+			// :
+			case TokenType::TokenPair:
+				return "Pair";
+			break;
+			// unknowm, other!
+			default:
+				return "None";
+			break;
+		}
+	}
+
+ 	/**
+ 	 * @function isAssociative($array)
+ 	 * argument: array $array
+ 	 * return : @bool
+	 */
 	/*
 	 * Arrays are :
 	 * associative or sequential
@@ -34,6 +118,7 @@ class Json {
 		//     return false;
 		return array_keys($array) !== range(0,count($array) - 1);
 	}
+
 	// function encodeValue($value) {
 	//     if($value === true || $value === false) {//bool
 	//         return $value;
@@ -54,6 +139,12 @@ class Json {
 	//         return false;
 	//     }
 	// }
+
+ 	/**
+ 	 * @function encode($array)
+ 	 * argument: array $array
+ 	 * return : @string
+	 */
 	function encode($array) {
 		$response="";
 		if(array() !== $array) {
@@ -112,9 +203,17 @@ class Json {
 		// $response.="\n";
 		return $response;
 	}
-	public $length=0;
-	public $input="";
-	public $index=0;
+
+	// function nextsIfWithSkips($characterIf,$token,$tok)
+	// function nextsIfWithSkip($characterIf,$token,$tok)
+	// function nextIfWithSkips($characterIf,$token,$tok)
+	// function nextIfWithSkip($characterIf,$token,$tok)
+
+ 	/**
+ 	 * @function nextsIf($characterIf)
+ 	 * argument: char $characterIf
+ 	 * return : @void
+	 */
 	function nextsIf($characterIf) {
 		$character=$this->input[$this->index];
 		if(is_array($characterIf)) {
@@ -136,6 +235,12 @@ class Json {
 			}
 		}
 	}
+
+ 	/**
+ 	 * @function nextIf($characterIf)
+ 	 * argument: char $characterIf
+ 	 * return : @void
+	 */
 	function nextIf($characterIf) {
 		$character=$this->input[$this->index];
 		if(is_array($characterIf)) {
@@ -159,22 +264,48 @@ class Json {
 			}
 		}
 	}
-	function skip($token) {
-		if($token[0] === TokenType::TokenSplit) {
+
+ 	/**
+ 	 * @function nextsIf($token,tok)
+ 	 * argument: token $token, tokentype $tok
+ 	 * return : @token
+	 */
+	function skip($token,$tok) {
+		// print "---start\n";
+		if($token[0] === $tok) {
 			$token=$this->nextToken();
+			// print "---next\n";
 		}
+		// print "---finish\n";
+		return $token;
 	}
-	function skips($token) {
-		while($token[0] === TokenType::TokenSplit) {
+
+ 	/**
+ 	 * @function skips($token,tok)
+ 	 * argument: token $token, tokentype $tok
+ 	 * return : @token
+	 */
+	function skips($token,$tok) {
+		// print "---start\n";
+		while($token[0] === $tok) {
 			$token=$this->nextToken();
+			// print "---next\n";
 		}
+		// print "---finish\n";
+		return $token;
 	}
+
+ 	/**
+ 	 * @function nextToken()
+ 	 * argument: void
+ 	 * return : @token
+	 */
 	function nextToken() {
 		if($this->index + 1 > $this->length) {
 			return [TokenType::TokenEOF,null];
 		}
 		$character=$this->input[$this->index];
-		while($character == ' ' || $character == '	' || $character == '\n') {
+		while($character == ' ' || $character == '	' || $character == "\n") {
 			if($this->index + 1 === $this->length) {
 				break;
 			}
@@ -205,13 +336,101 @@ class Json {
 			$this->index++;
 			return [TokenType::TokenPair,null];
 		}
-		else if($character == '"') {
+		// n, N
+		else if($character === 'n' || $character === 'N') {
+			$i=0;
+			$i++;
+			$character=$this->input[$this->index+$i];
+			// u, U
+			if($character === 'u' || $character === 'U') {
+				$i++;
+				$character=$this->input[$this->index+$i];
+				// l, L
+				if($character === 'l' || $character === 'L') {
+					$i++;
+					$character=$this->input[$this->index+$i];
+					// l, L
+					if($character === 'l' || $character === 'L') {
+						$this->index++;
+						$this->index++;
+						$this->index++;
+						$this->index++;
+						return [TokenType::TokenNull,null];
+					}
+				}
+			}
+		}
+		// t, T
+		else if($character === 't' || $character === 'T') {
+			$i=0;
+			$i++;
+			$character=$this->input[$this->index+$i];
+			// r, R
+			if($character === 'r' || $character === 'R') {
+				$i++;
+				$character=$this->input[$this->index+$i];
+				// u, U
+				if($character === 'u' || $character === 'U') {
+					$i++;
+					$character=$this->input[$this->index+$i];
+					// e, E
+					if($character === 'e' || $character === 'E') {
+						$this->index++;
+						$this->index++;
+						$this->index++;
+						$this->index++;
+						return [TokenType::TokenBool,true];
+					}
+				}
+			}
+		}
+		// f, F
+		else if($character === 'f' || $character === 'F') {
+			$i=0;
+			$i++;
+			$character=$this->input[$this->index+$i];
+			// a, A
+			if($character === 'a' || $character === 'A') {
+				$i++;
+				$character=$this->input[$this->index+$i];
+				// l, L
+				if($character === 'l' || $character === 'L') {
+					$i++;
+					$character=$this->input[$this->index+$i];
+					// s, S
+					if($character === 's' || $character === 'S') {
+						$i++;
+						$character=$this->input[$this->index+$i];
+						// e, E
+						if($character === 'e' || $character === 'E') {
+							$this->index++;
+							$this->index++;
+							$this->index++;
+							$this->index++;
+							$this->index++;
+							return [TokenType::TokenBool,false];
+						}
+					}
+				}
+			}
+		}
+		else if($character === '"' || $character === '\'') {
+			$stype=null;
+			if($character === '"') {
+				$stype=1;
+			}
+			else if($character === '\'') {
+				$stype=2;
+			}
 			$result="";
 			$characterPrev="";
 			$this->index++;
 			$character=$this->input[$this->index];
 			$characterNext=null;
-			while($characterNext != '"') {
+			while(
+				( $stype === 1 && $characterNext != '"' ) ||
+				( $stype === 2 && $characterNext != '\'')
+			) {
 				if($this->index == $this->length) {
 					break;
 				}
@@ -222,10 +441,11 @@ class Json {
 				else {
 					$characterNext=null;
 				}
-				if($character == '\\' && $characterNext == '"') {
+	   			// It added by me, not in the standard JSON!
+				if($character == '\\' && $characterNext == '\'') {
 					$this->index++;
+					// $this->index++;
 					$character=$characterNext;
-					//Fix: "hi\"!"
 					if($this->index+1 < $this->length) {
 						$characterNext=$this->input[$this->index+1];
 					}
@@ -233,6 +453,88 @@ class Json {
 						$characterNext=null;
 					}
 				}
+				else if($character == '\\' && $characterNext == 'n') {
+					$this->index++;
+					// $this->index++;
+					$character="\n";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == '\\') {
+					$this->index++;
+					// $this->index++;
+					$character="\\";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == '/') {
+					$this->index++;
+					// $this->index++;
+					$character="/";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == 't') {
+					$this->index++;
+					// $this->index++;
+					$character="\t";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == 'r') {
+					$this->index++;
+					// $this->index++;
+					$character="\r";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == 'b') {
+					$this->index++;
+					// $this->index++;
+					$character="\b";
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character == '\\' && $characterNext == '"') {
+					$this->index++;
+					// $this->index++;
+					$character=$characterNext;
+					// Fix: "hi\"!"
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				// else {
+				// 	$this->index++;
+				// }
+
 				// else if($character == '"') {
 				// 	// $this->index--;
 				// 	// $this->index--;
@@ -246,13 +548,21 @@ class Json {
 			$this->index++;
 			return [TokenType::TokenString,$result];
 		}
+		// <int>(0 .. 9), -, .
+		// Allow : .9, .04
+		// Allow : -5
+		// Allow : -5.048
 		else if(($character >='0' && $character <='9') || $character == '-' || $character == '.') {
 			$result=0;
 			$bitflag=false;
 			$bitfloat=false;
 			$bitfloatindex=0;
 			// while($character >='0' && $character <='9') {
-			while(($character >='0' && $character <='9') || $character == '-' || $character == '.') {
+			while(
+				($character >='0' && $character <='9') || 
+				$character == '-' ||
+				$character == '.'
+			) {
 				if($this->index == $this->length) {
 					break;
 				}
@@ -262,6 +572,7 @@ class Json {
 				}
 				else if($bitflag === true && $character === '-') {
 					// Error
+					exit("Aleady expression has a minus!\n");
 				}
 				else {
 					if($bitfloat === false && $character == '.') {
@@ -270,9 +581,12 @@ class Json {
 					}
 					else if($bitflag === true && $character == '.') {
 						// Error
+						exit("Aleady expression was a float type!\n");
 					}
-					else if($bitflag === true && ($character == 'e' || $character == 'E')) {
+					// else if($bitflag === true && ($character == 'e' || $character == 'E')) {
+					else if($character == 'e' || $character == 'E') {
 						//soon
+						exit("Soon, E+5 likely expression will develope....!\n");
 					}
 					else if($bitfloat === true) {
 						$bitfloatindex++;
@@ -286,7 +600,12 @@ class Json {
 					}
 				}
 				$this->index++;
-				$character=$this->input[$this->index];
+				if($this->index+1 < $this->length) {
+					$character=$this->input[$this->index];
+				}
+				else {
+					$character=null;
+				}
 			}
 			if($bitflag === true) {
 				$result*=-1;
@@ -299,33 +618,64 @@ class Json {
 		}
 		return [TokenType::TokenEOF,null];
 	}
+
+ 	/**
+ 	 * @function isValue(token)
+ 	 * argument: token $token
+ 	 * return : array[bool $status, string $result]
+	 */
 	function isValue($token) {
+		/**
+		 * Values:
+		 *			<int>, <float>, - <int>, - <float>, -<int>(e|E)(+|-)<int>, <int>(e|E)(+|-)<int>, -<float>(e|E)(+|-)<int>, <float>(e|E)(+|-)<int>
+		 *
+		 *			<bool> (true, false)
+		 *
+		 *			<null> (null)
+		 *
+		 *			<string> ("...", '...')
+		 *
+		 *			<object> {...}
+		 *
+		 *			<array> [...]
+		*/
 		if($token[0] === TokenType::TokenNumber) {
-			return [true,null];
+			return [true,$token[1]];
+			// return [true,null];
 			// return true;
 		}
 		else if($token[0] === TokenType::TokenString) {
-			return [true,null];
+			return [true,$token[1]];
+			// return [true,null];
 			// return true;
+		}
+		else if($token[0] === TokenType::TokenBool) {
+			return [true,$token[1]];
+		}
+		else if($token[0] === TokenType::TokenNull) {
+			return [true,null];
 		}
 		else if($token[0] === TokenType::TokenObjectOpen) {
 			// $tree=0;
 			// $result=[];
+			$this->index--;
+			// print "...\n";
 			$result=$this->decode(null,false);
 			// while($token[0] != TokenType::TokenObjectClose) {
 				
 			// }
+			// print_r($result);
 			return [true,$result];
 			// return true;
 		}
 		else if($token[0] === TokenType::TokenArrayOpen) {
 			// $tree=0;
 			// $result=[];
-
+			$this->index--;
+			// print "...\n";
 			// print $this->input."\n";
 			// print $this->index."\n";
 			// print $this->input[$this->index]."\n";
-
 			$result=$this->decode(null,false);
 			// while($token[0] != TokenType::TokenObjectClose) {
 			//	
@@ -336,8 +686,16 @@ class Json {
 		return [false,null];
 		// return false;
 	}
+
+ 	/**
+ 	 * @function decode(input,init=true)
+ 	 * argument: string $input, bool init
+ 	 * return : array[...]
+	 */
 	function decode($input,$init=true) {
 		if($init === true) {
+			// $this->tree=[];
+			// $this->trees=[];
 			$this->index=0;
 			$this->input=$input;
 			$this->length=mb_strlen($input);
@@ -347,154 +705,148 @@ class Json {
 			// $this->tree=0;
 		}
 		$result=[];
-		$token=$this->nextToken();
+		$this->token=$this->nextToken();
 		// print_r($token);
 		// $arrayOpen=false;
 		// $objectOpen=false;
-		$type=null;
-		while($token[0] !== TokenType::TokenEOF) {
-			// $result[]=$token[0]." => ".$token[1]."\n";
-			// $result.=$token[0]." => ".$token[1]."\n";
-			// $result[]=$token[0]." => ".$token[1];
-			// [
-			if($token[0] === TokenType::TokenArrayOpen || $token[0] === TokenType::TokenObjectOpen) {
-				// $arrayOpen=true;
-				if($token[0] === TokenType::TokenArrayOpen) {
-					$type=JsonType::JsonArray;
-					// $this->tree++;
-					// print "--> Open\n";
-					$this->tree[]=$type;
+		// // skip spaces
+		// $this->nextsIf([" ","\n","	"]);
+		if(
+			$this->token[0] === TokenType::TokenArrayOpen ||
+			$this->token[0] === TokenType::TokenObjectOpen
+		) {
+			$type=null;
+			if($this->token[0] === TokenType::TokenArrayOpen) {
+				$type=JsonType::JsonArray;
+			}
+			else if($this->token[0] === TokenType::TokenObjectOpen) {
+				$type=JsonType::JsonObject;
+			}
+			// $this->tree[]=$this->token[0];
+			$this->token=$this->nextToken();
+			// // skip spaces
+			// $this->nextsIf([" ","\n","	"]);
+			// // skip split
+			// $this->skips($token,TokenType::TokenSplit);
+			// // skip spaces
+			// $this->nextsIf([" ","\n","	"]);
+			// // skip space(s) and split(s)
+			// $this->nextsIfWithSkips([" ","\n","	"],$token,TokenType::TokenSplit);
+			// skip split
+			// print_r($token);
+			$this->token=$this->skips($this->token,TokenType::TokenSplit);
+			// print_r($token);
+			// exit;
+			// parse until arrayClose
+			while(
+				( $type === JsonType::JsonArray && $this->token[0] !== TokenType::TokenArrayClose ) ||
+				( $type === JsonType::JsonObject && $this->token[0] !== TokenType::TokenObjectClose )
+			) {
+				// print "==>".$this->typeToken($this->token) ."\n";
+				if($this->token[0] === TokenType::TokenEOF) {
+					exit("Command is finish, but arrayClose not found!\n");
 				}
-				else if($token[0] === TokenType::TokenObjectOpen) {
-					$type=JsonType::JsonObject;
-					// $this->tree++;
-					// print "--> Open\n";
-					$this->tree[]=$type;
-				}
-				$token=$this->nextToken();
-				$a=[];
-				// print_r($token);
-				if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
-					// ;
-					// $this->tree--;
-					// print "--> Close\n";
-					unset($this->tree[count($this->tree)-1]);
-					if(count($this->tree) == 0) {
-						return $a;
-					}
-				}
-				else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
-					// ;
-					// $this->tree--;
-					// print "--> Close\n";
-					unset($this->tree[count($this->tree)-1]);
-					if(count($this->tree) == 0) {
-						return $a;
-					}
-				}
-				while(
-					($type === JsonType::JsonObject && $token[0] != TokenType::TokenObjectClose) ||
-					($type === JsonType::JsonArray && $token[0] != TokenType::TokenArrayClose)
-				) {
-					$first=null;
-					$second=null;
-					$haskey=false;
-					if($token[0] === TokenType::TokenSplit) {
-						$token=$this->nextToken();
-						while($token[0] === TokenType::TokenSplit) {
-							$token=$this->nextToken();
-						}
-						continue;
-					}
-					if($this->isValue($token)) {
-						$first=$token;
-					}
-					else {
-						// Error
-						exit("NoneValue founded!\n");
-					}
-					$token=$this->nextToken();
-					// Only allowed for object, not array!
+				$first=null;
+				$second=null;
+				$first=$this->isValue($this->token);
+				if($first[0] === true) {
+					// print "----yes\n";
+					// $first=$token;
+					// $first=$this->token;
+					// next may be was pair or split or arrayClose or EOF!
+					$this->token=$this->nextToken();
+					// print "\t==>".$this->typeToken($token) ."\n";
 					if($type === JsonType::JsonObject) {
-						if($token[0] == TokenType::TokenPair) {
-							$token=$this->nextToken();
-							if($first[0] === TokenType::TokenString) {// Pair key must be string
-								if($this->isValue($token)) {
-									$second=$token;
-									$haskey=true;
+						if($this->token[0] === TokenType::TokenPair) {
+							if(is_string($first[1]) === true) {
+								$this->token=$this->nextToken();
+								// $second=$this->token;
+								$second=$this->isValue($this->token);
+								if($second[0] === true) {
+									$this->token=$this->nextToken();
 								}
 								else {
-									// Error
-									exit("NoneValue as PairValue!\n");
+									// Error!
+									exit("Unknowm token, pair value is not a value!\n");
 								}
-								$token=$this->nextToken();
-								// print_r($token);
 							}
 							else {
-								// Error
-								exit("PairKey Was not String!\n");
+								// Error!
+								exit("Unknowm token, key of pair value is not a string!\n");
 							}
 						}
 						else {
-							// print_r($token);
-							// Error
-							exit("All item of object should was pair value (both of the key and value)!\n");
+							// Error!
+							exit("Unknowm token, all item of object should was a pair value!\n");
 						}
 					}
-					if($haskey === false) {
-						$a[]=$first[1];
+					// its a array JSON
+					if($second === null) {
+						/**
+						 * result[index]
+						 *	=
+						 *	<value> (first)
+						 */
+						$result[]=$first[1];
 					}
+					// its a object JSON
 					else {
-						$a[$first[1]]=$second[1];
+						/**
+						 * result[
+						 *		<value> (first)
+						 *		]
+						 *	=
+						 *	<value> (second)
+						 */
+						$result[$first[1]]=$second[1];
 					}
-					// else if($arrayOpen)
-					if($token[0] == TokenType::TokenSplit) {
-						$token=$this->nextToken();
-						while($token[0] === TokenType::TokenSplit) {
-							$token=$this->nextToken();
-						}
-					}
-					else {
-						// print_r($a);
-						// exit("Error!\n");
-						// // Error
-						// // May be last item of the array
-						if($type === JsonType::JsonArray && $token[0] === TokenType::TokenArrayClose) {
-							// ;
-							// $this->tree--;
-							// print "--> Close\n";
-							unset($this->tree[count($this->tree)-1]);
-							if(count($this->tree) == 0) {
-								return $a;
-							}
-						}
-						else if($type === JsonType::JsonObject && $token[0] === TokenType::TokenObjectClose) {
-							// ;
-							// $this->tree--;
-							// print "--> Close\n";
-							unset($this->tree[count($this->tree)-1]);
-							if(count($this->tree) == 0) {
-								return $a;
-							}
-						}
-						else {
-							print_r($this->tree);
-							// print_r($a);
-							// print_r($token);
-							exit("Error!\n");
-						}
-					}
+					// print_r($result);
+					$this->token=$this->skips($this->token,TokenType::TokenSplit);
+					// $this->skips($token,TokenType::TokenSplit);
 				}
-				$result=$a;
-				// $token[0]." => ".$token[1];
-				// $arrayOpen=false;
+				else {
+					// print "----no\n";
+					// print_r($token);
+					// print $this->input."\n";
+					// print $this->index."\n";
+					// print $this->input[$this->index]."\n";
+					$this->token=$this->nextToken();
+					// print_r($token);
+				}
+				// print "\t==>".$this->typeToken($token) ."\n";
+				// print_r($token);
 			}
-			$token=$this->nextToken();
 		}
+		// else if($this->token[0] === TokenType::TokenObjectOpen) {
+		// 	// $this->tree[]=$this->token[0];
+		// }
+		else if($this->token[0] === TokenType::TokenEOF) {
+			// ;
+			// return;
+			// exit;
+		}
+		else {
+			// Error!
+			exit("Unknowm token at the begin of command!\n");
+		}
+		// print_r($result);
 		return $result;
 	}
 }
 $json=new Json;
+// // $data=json_encode([1,2,3,4,5,"n\"am':=>[]{}e"=>"ali"]);
+// // $data=json_encode(["name"=>"ali","int"=>110,"float"=>19.98,"-int"=>-110,"-float"=>-19.98,"bool"=>true]);
+// //$data=json_encode(["name"=>"ali","int"=>110,"float"=>19.98,"-int"=>-110,"-float"=>-19.98,"bool"=>true,"list"=>[1,2,3,4,5]]);
+// //$data=json_encode(["name"=>"ali","int"=>110,"float"=>19.98,"-int"=>-110,"-float"=>-19.98,"bool"=>true,"list"=>["name"=>"ali","family"=>"ahmadi"]]);
+// //print $data."\n";
+// //$array=$json->decode($data);
+// //$array=$json->decode('{"list":{"name":"ali","family":"ahmadi"}}');
+// $array=$json->decode('{"list":{"name":"ali","family":"ahmadi"},"age":18}');
+// $array=$json->decode('{"list":{"name":"ali","family":"ahmadi"},"age":18.....2}');
+// $array=$json->decode('{"list":{"name":"ali","family":"ahmadi"},"age":097}');
+// //$array=$json->decode('{"name":"ali","int":110,"float":19.98,"-int":-110,"-float":-19.98,"bool":TRUE,"bbb":false}');
+// print_r($array);
+// //print_r($json->array);
 // print $json->encode([1,2,3,4])."\n";
 // print $json->encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
 // print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
@@ -526,11 +878,31 @@ $json=new Json;
 // print_r($json->decode('			  [,,,,4]'));
 // print_r($json->decode('{}'));
 // print_r($json->decode('{"a":4,"6":945,,,}'));
-print_r($json->decode('{"a":4,"b":456,,,,}'));
-print_r($json->decode('{,"a":4,}'));
-print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
-print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
-print_r($json->decode('[1,]'));
-print_r($json->decode('[4]'));
-print_r($json->decode('["max",49,"BaseMax"]'));
-
+// print_r($json->decode('{"a":4,"b":456,,,,}'));
+// print_r($json->decode('{,"a":4,}'));
+// print_r($json->decode('{,,,"a":4,"b":456,,,,}'));
+// print_r($json->decode('{,,,,"a":4,,,,,,"6":945,,,}'));
+// print_r($json->decode('[,,,,]'));
+// print_r($json->decode('[4]'));
+// print_r($json->decode(' [,,,,4]'));
+// print_r($json->decode(' [  , , , , 4]'));
+// print_r($json->decode(' [  , , , , 4 ]    '));
+// print_r($json->decode(' [  , , 	,	 , 	4	 ]    '));
+// print_r($json->decode("[\n]"));
+// print_r($json->decode('["max",49,"BaseMax"]'));
+// print_r($json->decode('[1,[]]'));
+// print_r($json->decode('[1,[4]]'));
+// print_r($json->decode('[1,[4,,,6,[8]]]'));
+// print_r($json->decode('{"name":"Max","line":456,,,,}'));
+// print_r($json->decode('{"name":"Max","line":456,,,,}'));
+// print_r($json->decode('{"name":"Max",4:555,,,,}'));
+// print_r($json->decode('[null,false,true]'));
+// $res=($json->decode('[null,false,true]'));
+// var_dump($res[1]);
+// var_dump($res);
+// var_dump($json->decode('[null,false,true,]'));
+// print_r($json->decode("[\"45\\\\\"]"));
+// $arg='["4\\\\"]';
+// var_dump($arg);
+// print $arg."\n";
+// print_r($json->decode($arg));
