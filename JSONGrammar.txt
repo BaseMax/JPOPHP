@@ -1,4 +1,4 @@
-============== JSON Grammar
+============== Standard JSON Grammar
 
 - json
     - element
