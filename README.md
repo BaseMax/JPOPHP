@@ -70,13 +70,13 @@ Average Time : 0.008204937 ÷ 4 = 0.002051234
 
 #### Own function `$json->encode()`
 ```
-1th Time : 0.44240999221802 elapsed
-2th Time : 0.43391299247742 elapsed
-3th Time : 0.44072198867798 elapsed
-4th Time : 0.43309497833252 elapsed
+1th Time : 0.17581701278687 elapsed
+2th Time : 0.17606496810913 elapsed
+3th Time : 0.17591309547424 elapsed
+4th Time : 0.17687296867371 elapsed
 -----------------------------------
-Sigma Time : 1.750139952
-Average Time : 1.750139952 ÷ 4 = 0.437534988
+Sigma Time : 0.704668045
+Average Time : 0.704668045 ÷ 4 = 0.176167011
 ```
 
 [View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-own.php)
