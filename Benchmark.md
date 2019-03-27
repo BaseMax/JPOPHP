@@ -1,4 +1,6 @@
-## Benchmark
+# Benchmark
+
+## Encode
 
 #### Orginal PHP function `json_encode()`
 
@@ -15,6 +17,7 @@ Average Time : 0.008204937 ÷ 4 = 0.002051234
 [View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-php.php)
 
 #### Own function `$json->encode()`
+
 ```
 1th Time : 0.17581701278687 elapsed
 2th Time : 0.17606496810913 elapsed
@@ -26,3 +29,12 @@ Average Time : 0.704668045 ÷ 4 = 0.176167011
 ```
 
 [View Full Source Code](https://github.com/BaseMax/JsonParser/blob/master/Performance-own.php)
+
+---------
+
+## Decode
+
+#### Orginal PHP function `json_decode()`
+
+#### Own function `$json->decode()`
+
