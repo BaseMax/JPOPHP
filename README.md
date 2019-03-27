@@ -27,7 +27,6 @@ Tiny Library for parse JSON.
 ## Unfinished items
 
 - Improve speed and performance (Speed does not reach `C Language`!)
-- Fix bugs of arrays in arrays (Tree Array)
   
 ## Usage
 
