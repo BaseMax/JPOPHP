@@ -24,8 +24,7 @@ Tiny Library for parse JSON.
 - [ ] Sub Object
 
 ## Unfinished items
-  
-- `encode()` function
+
 - Improve speed and performance (Speed does not reach `C Language`!)
 - Fix bugs of arrays in arrays (Tree Array)
   
@@ -35,7 +34,6 @@ All public functions are accessible through the `$json` variable.
 
 - `array $json->decode(string);`
 - `string $json->encode(array);`
-
 
 
 | Function | Return Type | Argument |
