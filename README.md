@@ -39,7 +39,6 @@ All public functions are accessible through the `$json` variable.
 
 To view the full details, run the [Example.php](https://github.com/BaseMax/JsonParser/blob/master/Example.php) file.
 
-
 ## JSON Grammar
 
 - json
