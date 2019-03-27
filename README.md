@@ -18,6 +18,7 @@ Tiny Library for parse JSON.
 - [x] Integer
 - [x] Float
 - [x] Boolean (`true` , `false`)
+- [x] Null
 - [x] String
 - [ ] Char 
 - [x] Sub Array
