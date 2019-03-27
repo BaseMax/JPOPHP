@@ -35,12 +35,6 @@ All public functions are accessible through the `$json` variable.
 - `array $json->decode(string);`
 - `string $json->encode(array);`
 
-
-| Function | Return Type | Argument |
-| -------- | ----------- | -------- |
-| encode() |     String   |  Array  |
-| decode() |     Array  |  String   |
-
 ## Samples
 
 To view the full details, run the [Example.php](https://github.com/BaseMax/JsonParser/blob/master/Example.php) file.
