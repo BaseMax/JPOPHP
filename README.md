@@ -1,4 +1,4 @@
-# JsonParser
+# PHP JsonParser
 Tiny Library for parse JSON.
 
 ![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-6.6%20KB-blue.svg) ![JsonParser.min.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
@@ -51,105 +51,105 @@ To view the full details, run the [Example.php](https://github.com/BaseMax/JsonP
 ## JSON Grammar
 
 - json
-    - element
+ - element
 
 - value
-    - object
-    - array
-    - string
-    - number
-    - "true"
-    - "false"
-    - "null"
+ - object
+ - array
+ - string
+ - number
+ - "true"
+ - "false"
+ - "null"
 
 - object
-    - '{' ws '}'
-    - '{' members '}'
+ - '{' ws '}'
+ - '{' members '}'
 
 - members
-    - member
-    - member ',' members
+ - member
+ - member ',' members
 
 - member
-    - ws string ws ':' element
+ - ws string ws ':' element
 
 - array
-    - '[' ws ']'
-    - '[' elements ']'
+ - '[' ws ']'
+ - '[' elements ']'
 
 - elements
-    - element
-    - element ',' elements
+ - element
+ - element ',' elements
 
 - element
-    - ws value ws
+ - ws value ws
 
 - string
-    - '"' characters '"'
+ - '"' characters '"'
 
 - characters
-    - ""
-    - character characters
+ - ""
+ - character characters
 
 - character
-    - '0020' . '10ffff' - '"' - '\'
-    - '\' escape
+ - '0020' . '10ffff' - '"' - '\'
+ - '\' escape
 
 - escape
-    - '"'
-    - '\'
-    - '/'
-    - 'b'
-    - 'n'
-    - 'r'
-    - 't'
-    - 'u' hex hex hex hex
+ - '"'
+ - '\'
+ - '/'
+ - 'b'
+ - 'n'
+ - 'r'
+ - 't'
+ - 'u' hex hex hex hex
 
 - hex
-    - digit
-    - 'A' . 'F'
-    - 'a' . 'f'
+ - digit
+ - 'A' . 'F'
+ - 'a' . 'f'
 
 - number
-    - int frac exp
+ - int frac exp
 
 - int
-    - digit
-    - onenine digits
-    - '-' digit
-    - '-' onenine digits
+ - digit
+ - onenine digits
+ - '-' digit
+ - '-' onenine digits
 
 - digits
-    - digit
-    - digit digits
+ - digit
+ - digit digits
 
 - digit
-    - '0'
-    - onenine
+ - '0'
+ - onenine
 
 - onenine
-    - '1' . '9'
+ - '1' . '9'
 
 - frac
-    - ""
-    - '.' digits
+ - ""
+ - '.' digits
 
 - exp
-    - ""
-    - 'E' sign digits
-    - 'e' sign digits
+ - ""
+ - 'E' sign digits
+ - 'e' sign digits
 
 - sign
-    - ""
-    - '+'
-    - '-'
+ - ""
+ - '+'
+ - '-'
 
 - ws
-    - ""
-    - '0009' ws
-    - '000A' ws
-    - '000D' ws
-    - '0020' ws
+ - ""
+ - '0009' ws
+ - '000A' ws
+ - '000D' ws
+ - '0020' ws
 
 
 ## Performance
