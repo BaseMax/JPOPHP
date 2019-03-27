@@ -24,7 +24,7 @@ Tiny Library for parse JSON.
 - [x] Sub Array
 - [x] Sub Object
 
-## Unfinished items
+## TODO
 
 - Improve speed and performance (Speed does not reach `C Language`!)
   
