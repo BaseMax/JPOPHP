@@ -63,6 +63,12 @@ Do not expect to reach it quickly.
 However, there is always way for improvement.
 
 
+## History
+
+| Version Num | Date Begin | Date Finish |
+| ----------- | ---------- | ----------- |
+
+
 # License
 
 JsonParser is licensed under the [GNU General Public License](https://github.com/BaseMax/JsonParser/blob/master/LICENSE).
