@@ -67,7 +67,9 @@ However, there is always way for improvement.
 
 | Version Num | Date Begin | Date Finish |
 | ----------- | ---------- | ----------- |
-
+| 1.0 (first) | 2018-06-26 | 2018-06-26 |
+| 1.1 | 2018-06-27 | 2019-03-13 |
+| 2.2 | 2019-03-27 | - |
 
 # License
 
