@@ -1,1 +1,25 @@
-
+{
+    "name": "basemax/jsonparser",
+    "type": "library",
+    "description": "Tiny Library for parse JSON.",
+    "keywords": ["json","parser","lexer"],
+    "homepage": "https://github.com/BaseMax/JsonParser",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Max Base",
+            "email": "MaxBaseCode@Gmail.Com",
+            "homepage": "https://BaseMax.Github.io",
+            "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/BaseMax/JsonParser"
+        }
+    ],
+    "require": {
+      
+    }
+}
