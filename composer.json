@@ -1,7 +1,7 @@
 {
     "name": "basemax/jsonparser",
     "type": "library",
-    "description": "Tiny Library for parse JSON.",
+    "description": "PHP JSON Parser (JSONParser PHP, JSONPHP) is a library for parsing the data in JSON format.",
     "keywords": ["json","parser","lexer"],
     "homepage": "https://github.com/BaseMax/JsonParser",
     "license": "GPL-3.0-or-later",
