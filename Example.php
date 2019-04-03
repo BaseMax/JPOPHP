@@ -1,6 +1,6 @@
 <?php
 include "JsonParser.php";
-/* Version: 2.2 */
+/* Version: 2.2+ */
 print $json->encode([1,2,3,4])."\n";
 print $json->encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
 print $json->encode(["name"=>"max","age"=>49,"username"=>"BaseMax"])."\n";
