@@ -28,7 +28,7 @@ The package can also take a JSON encoded string and decodes it to retrieve the o
 - [x] Boolean (`true` , `false`)
 - [x] Null
 - [x] String
-- [ ] Char 
+- [x] Char (Now this is same as a string)
 - [x] Sub Array
 - [x] Sub Object
 
