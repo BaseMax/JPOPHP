@@ -8,8 +8,9 @@ We provides a pure PHP solution to take a value and generates a string that repr
 
 The package can also take a JSON encoded string and decodes it to retrieve the original data value.
 
-![JsonParser.min.php File Size](https://img.shields.io/badge/Library%20Size-23.5%20KB-blue.svg) ![JsonParser.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
-
+![JsonParser.php File Size](https://img.shields.io/badge/Library%20Size-26.0%20KB-blue.svg)
+![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-10.3%20KB-blue.svg)
+![JsonParser.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
 
 ## Features
 
