@@ -2,9 +2,9 @@
 /**
 *
 * @Name : JsonParser
-* @Version : 2.2
+* @Version : 2.2.1
 * @Programmer : Max
-* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24, 2019-03-26, 2019-03-27
+* @Date : 2018-06-26, 2018-06-27, 2019-03-23, 2019-03-24, 2019-03-26, 2019-03-27, 2019-04-04
 * @Released under : https://github.com/BaseMax/JsonParser/blob/master/LICENSE
 * @Repository : https://github.com/BaseMax/JsonParser
 *
@@ -355,6 +355,7 @@ class Json {
 						$this->index++;
 						$this->index++;
 						$this->index++;
+
 						return [TokenType::TokenNull,null];
 					}
 				}
@@ -428,8 +429,8 @@ class Json {
 			$character=$this->input[$this->index];
 			$characterNext=null;
 			while(
-				( $stype === 1 && $characterNext != '"' ) ||
-				( $stype === 2 && $characterNext != '\'')
+				( $stype === 1 && $characterNext !== '"' ) ||
+				( $stype === 2 && $characterNext !== '\'')
 			) {
 				if($this->index == $this->length) {
 					break;
@@ -441,8 +442,8 @@ class Json {
 				else {
 					$characterNext=null;
 				}
-	   			// It added by me, not in the standard JSON!
-				if($character == '\\' && $characterNext == '\'') {
+				// It added by me, not in the standard JSON!
+				if($character === '\\' && $characterNext === '\'') {
 					$this->index++;
 					// $this->index++;
 					$character=$characterNext;
@@ -453,7 +454,79 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == 'n') {
+				/**
+				*
+				* @Name : Unicode Support
+				* @Description : This feature is requested by Frederick Behrends.
+				* @url, @issue : https://github.com/BaseMax/JsonParser/issues/1
+				*/
+				else if($character === '\\' && $characterNext === 'u') {
+					$unicode = '';
+					$this->index++;
+					$this->index++;
+					$perform=true;
+					$i=1; // We require it after the loop!
+					for(;$i<=4;$i++) {
+						// print "...\n";
+						// if($perform === false) {
+						// 	break;
+						// }
+						if($this->index+1 < $this->length) {
+							$characterNext=$this->input[$this->index]; // As temp variable
+							$perform=true;
+							if(
+								$characterNext >= '0' && $characterNext <= '9' ||
+								$characterNext >= 'A' && $characterNext <= 'F'
+							) {
+								$character=$characterNext;// It will use when loop break! ($perform=false)
+								$unicode.=$character;
+								$this->index++;
+							}
+							else { // May be " character!
+								// print "A stage\n";
+								// print $unicode."\n";
+								// print $character."\n";
+								$perform=false;
+								break;
+							}
+						}
+						else {
+							// print "B stage\n";
+							$perform=false;
+							break;
+						}
+					}
+					if($perform === true) {
+						$this->index--; // Required...
+						// print "C Stage\n";
+						// print $unicode."\n";
+						$unicode="%u".$unicode;
+						# $unicode = preg_replace('/%u([0-9A-F]){4}/', '&#x$1;', $unicode);
+						$unicode = preg_replace('/%u([0-9A-F]+)/', '&#x$1;', $unicode);
+						// ENT_COMPAT : Will convert double-quotes and leave single-quotes alone.
+						// https://www.php.net/manual/en/function.htmlentities.php
+						// print $unicode."\n";
+						$character=html_entity_decode($unicode, ENT_COMPAT, 'UTF-8');
+						// print $character."\n";
+					}
+					else {
+						// Last index is $i
+						// We ($i-1) time rub the $index++
+						// print $i."\n";
+						// for($ii=1;$ii<$i-1;$ii++) {
+						// 	$this->index--;
+						// }
+						$this->index--;
+						$character="\\u".$unicode;
+					}
+					if($this->index+1 < $this->length) {
+						$characterNext=$this->input[$this->index+1];
+					}
+					else {
+						$characterNext=null;
+					}
+				}
+				else if($character === '\\' && $characterNext === 'n') {
 					$this->index++;
 					// $this->index++;
 					$character="\n";
@@ -464,7 +537,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == '\\') {
+				else if($character === '\\' && $characterNext === '\\') {
 					$this->index++;
 					// $this->index++;
 					$character="\\";
@@ -475,7 +548,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == '/') {
+				else if($character === '\\' && $characterNext === '/') {
 					$this->index++;
 					// $this->index++;
 					$character="/";
@@ -486,7 +559,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == 't') {
+				else if($character === '\\' && $characterNext === 't') {
 					$this->index++;
 					// $this->index++;
 					$character="\t";
@@ -497,7 +570,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == 'r') {
+				else if($character === '\\' && $characterNext === 'r') {
 					$this->index++;
 					// $this->index++;
 					$character="\r";
@@ -508,7 +581,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == 'b') {
+				else if($character === '\\' && $characterNext === 'b') {
 					$this->index++;
 					// $this->index++;
 					$character="\b";
@@ -519,7 +592,7 @@ class Json {
 						$characterNext=null;
 					}
 				}
-				else if($character == '\\' && $characterNext == '"') {
+				else if($character === '\\' && $characterNext === '"') {
 					$this->index++;
 					// $this->index++;
 					$character=$characterNext;
@@ -906,3 +979,9 @@ $json=new Json;
 // var_dump($arg);
 // print $arg."\n";
 // print_r($json->decode($arg));
+// print_r($json->decode('["1\u05B5"]'));
+print_r($json->decode('["1\u05F1"]'));
+// print_r($json->decode('["1\u05F"]'));
+// print_r($json->decode('["1\u05FX"]'));
+// print_r($json->decode('["1\uM05F"]'));
+// print_r($json->decode('["1\uM0\'5F"]'));
