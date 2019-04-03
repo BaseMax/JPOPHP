@@ -458,7 +458,7 @@ class Json {
 				*
 				* @Name : Unicode Support
 				* @Description : This feature is requested by Frederick Behrends.
-				* @url, @issue : https://github.com/BaseMax/JsonParser/issues/1
+				* @Url, @Issue : https://github.com/BaseMax/JsonParser/issues/1
 				*/
 				else if($character === '\\' && $characterNext === 'u') {
 					$unicode = '';
@@ -980,7 +980,7 @@ $json=new Json;
 // print $arg."\n";
 // print_r($json->decode($arg));
 // print_r($json->decode('["1\u05B5"]'));
-print_r($json->decode('["1\u05F1"]'));
+// print_r($json->decode('["1\u05F1"]'));
 // print_r($json->decode('["1\u05F"]'));
 // print_r($json->decode('["1\u05FX"]'));
 // print_r($json->decode('["1\uM05F"]'));
