@@ -60,6 +60,12 @@ $arg='["4\\\\"]';
 var_dump($arg);
 print $arg."\n";
 print_r($json->decode($arg));
+print_r($json->decode('["1\u05B5"]'));
+print_r($json->decode('["1\u05F1"]'));
+print_r($json->decode('["1\u05F"]'));
+print_r($json->decode('["1\u05FX"]'));
+print_r($json->decode('["1\uM05F"]'));
+print_r($json->decode('["1\uM0\'5F"]'));
 
 /* Version: 0 - 2.0
 $data=json_encode([1,2,3,4,5,"n\"am':=>[]{}e"=>"ali"]);
