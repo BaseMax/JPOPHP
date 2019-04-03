@@ -74,6 +74,9 @@ However, there is always way for improvement.
 - **Version 2.2** :
 2019-03-25
 
+- **Version 2.2.1** :
+2019-04-04
+
 
 # License
 
