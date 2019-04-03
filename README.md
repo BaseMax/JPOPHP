@@ -16,9 +16,9 @@ The package can also take a JSON encoded string and decodes it to retrieve the o
 - Small and light library
 - Hand-coded scanner
 - Analyze and found Errors
-- Poor speed and performance
+- Unicode Support
 - No dependencies (only suitable version of the `PHP`)
-- Written and run on `PHP 7.2.6`
+- Written and run on `PHP 7.2.6`, `PHP 7.3.4`
 
 ## Type of supported values
   
