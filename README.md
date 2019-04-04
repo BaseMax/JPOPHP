@@ -73,7 +73,7 @@ However, there is always way for improvement.
 2018-06-27 - 2019-03-13
 
 - **Version 2.2** :
-2019-03-25
+2019-03-25 - 2019-04-03
 
 - **Version 2.2.1** :
 2019-04-04
