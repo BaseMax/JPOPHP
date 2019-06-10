@@ -1,8 +1,8 @@
-# PHP JsonParser
+# PHP JsonParser (PJP)
 
 **Tiny Library for parse JSON.**
 
-JsonParser can encode and decode data in JSON format.
+PHPJsonParser can encode and decode data in JSON format.
 
 We provides a pure PHP solution to take a value and generates a string that represents that value in JSON format.
 
