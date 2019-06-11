@@ -1,5 +1,5 @@
 <?php
-include "JsonParser.php";
+include "JPOPHP.php";
 $data='{"name":"Max","family":"Base"}';
 $time = microtime(true);
 for($i=1;$i<=10000;$i++)
