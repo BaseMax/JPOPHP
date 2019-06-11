@@ -81,4 +81,4 @@ However, there is always way for improvement.
 
 # License
 
-JsonParser is licensed under the [GNU General Public License](https://github.com/BaseMax/JsonParser/blob/master/LICENSE).
+JsonParser (PHP JSON Parser) is licensed under the [GNU General Public License](https://github.com/BaseMax/JsonParser/blob/master/LICENSE).
