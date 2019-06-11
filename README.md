@@ -1,4 +1,4 @@
-# PHP JsonParser (PJP)
+# JsonParserObjectPHP (JPOPHP)
 
 **Tiny Library for parse JSON.**
 
