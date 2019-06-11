@@ -1,5 +1,5 @@
 <?php
-include "JsonParser.php";
+include "JPOPHP.php";
 /* Version: 2.2+ */
 print $json->encode([1,2,3,4])."\n";
 print $json->encode([1,2,[94,15,34,67],3,4,["name"=>"max"]])."\n";
