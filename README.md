@@ -14,7 +14,7 @@ The package can also take a JSON encoded string and decodes it to retrieve the o
 ![JsonParser.min.php File Size](https://img.shields.io/badge/Compressed%20Size-10.3%20KB-blue.svg)
 ![JsonParser.php Validation Code](https://img.shields.io/badge/Validation%20Code-No%20Error-green.svg)
 
-## Features
+## JPOPHP Features
 
 - Small and light library
 - Hand-coded scanner
@@ -34,7 +34,7 @@ The package can also take a JSON encoded string and decodes it to retrieve the o
 - [x] Sub Array
 - [x] Sub Object
 
-## TODO
+## JPOPHP TODO
 
 - Improve speed and performance (Speed does not reach `C Language`!)
   
@@ -54,7 +54,7 @@ To view the full details, run the [Example.php](https://github.com/BaseMax/JsonP
 You can check the **[JSONGrammar.txt](https://github.com/BaseMax/JsonParser/blob/master/JSONGrammar.txt)** file to view the JSON standard grammar.
 
 
-## Performance
+## JPO-PHP Performance
 
 Competition between `json_encode(...)` and `$json->encode(...)`
 
@@ -66,7 +66,7 @@ Do not expect to reach it quickly.
 However, there is always way for improvement.
 
 
-## History
+## JPO PHP History
 
 - **Version 1.0 (first)** :
 2018-06-26 - 2018-06-26
